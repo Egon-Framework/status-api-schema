@@ -22,4 +22,21 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: swagger-ui
+          path: docs/build/html
+
+  deploy:
+    name: Publish Documentation
+    if: github.event_name == 'push'
+    needs: [ build ]
+
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
