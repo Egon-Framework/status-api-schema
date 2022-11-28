@@ -1,0 +1,49 @@
+name: Documentation
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Generate Swagger UI
+        uses: Legion2/swagger-ui-action@v1
+        with:
+          output: swagger-ui
+          spec-file: api.yml
+
+      - name: Upload build artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: swagger-ui
+
+  deploy:
+    name: Publish Documentation
+    if: github.event_name == 'push'
+    needs: [ build ]
+
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
