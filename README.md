@@ -1,7 +1,7 @@
 # Egon Viz API
 
-The viz API is responsible for exposing Egon metrics used by the Egon visualization dashboard.
+The visualization API is responsible for exposing Egon metrics for use by the Egon visualization dashboard.
 This repository defines the API specification and provides documentation for spinning up local development instances.
 
-The API definition is written using the [OPENAPI](https://www.openapis.org/) (formally called _swagger_) specification.
-Suitable examples are included in the specification for running a small mock development server.
+The API is defined using the [OPENAPI](https://www.openapis.org/) specification (formally called _swagger_).
+Suitable examples are included in the specification for running a small development server.
