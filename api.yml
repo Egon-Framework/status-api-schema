@@ -1,10 +1,10 @@
 openapi: 3.0.3
 info:
-  title: Egon Viz API
+  title: Egon Status API
   description: |-
-    API specification for the egon visualization utility.
+    API specification for monitoring the Egon Framework.
     
-    For more information, checkout the Egon-Framework [on GitHub](https://github.com/Egon-Framework/)
+    For more information, checkout the source code [on GitHub](https://github.com/Egon-Framework/status-api)
   version: 0.0.1
 tags:
   - name: pipeline
