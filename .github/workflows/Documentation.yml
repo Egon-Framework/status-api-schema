@@ -1,0 +1,25 @@
+name: Documentation
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  build:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Generate Swagger UI
+        uses: Legion2/swagger-ui-action@v1
+        with:
+          output: swagger-ui
+          spec-file: api.yml
+
+      - name: Upload build artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: docs/build/html
