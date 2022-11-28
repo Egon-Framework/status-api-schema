@@ -1,15 +1,30 @@
 openapi: 3.0.3
 info:
   title: Egon Viz API
+  description: |-
+    API specification for the egon visualization utility.
+    
+    For more information, checkout the Egon-Framework [on GitHub](https://github.com/Egon-Framework/)
   version: 0.0.1
 tags:
   - name: pipeline
     description: The structure and status of a running pipeline
 paths:
-  /pipeline/:
+  /pipeline/{pipelineId}:
     get:
+      tags:
+        - pipeline
       summary: Return pipeline data by ID
       description: Returns information for a currently running pipeline
+      operationId: getPipelineById
+      parameters:
+        - name: pipelineId
+          in: path
+          description: Pipeline ID to return data for
+          required: true
+          schema:
+            type: integer
+            format: int
       responses:
         '200':
           description: success
@@ -17,6 +32,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Pipeline'
+              examples:
+                etl:
+                  summary: A generic ETL Pipeline
+                  value:
+                    id: "0x7f50239539d0"
+                    name: ETL Pipeline
+                    nodes: [
+                      { id: "0x7f5023953990", name: Extract },
+                      { id: "0x7f50239539b0", name: Transform },
+                      { id: "0x7f502385e910", name: Load },
+                    ]
         '401':
           $ref: '#/components/responses/UnauthorizedError'
         '404':
@@ -37,7 +63,6 @@ components:
           type: string
         name:
           type: string
-          example: My Pipeline
         nodes:
           type: array
           items:
@@ -52,7 +77,6 @@ components:
           type: string
         name:
           type: string
-          example: Extract
   securitySchemes:
     TokenAuth:
       type: apiKey
