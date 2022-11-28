@@ -1,0 +1,15 @@
+openapi: 3.0.3
+info:
+  title: Egon Viz API
+  version: 0.0.1
+tags:
+  - name: pipeline
+    description: The structure and status of a running pipeline
+paths:
+  /pipeline/:
+    get:
+      summary: Return pipeline data by ID
+      description: Returns information for a currently running pipeline
+      responses:
+        '200':
+          description: success
