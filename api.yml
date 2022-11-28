@@ -13,3 +13,36 @@ paths:
       responses:
         '200':
           description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pipeline'
+components:
+  schemas:
+    Pipeline:
+      required:
+        - id
+        - name
+        - nodes
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          example: My Pipeline
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Node'
+    Node:
+      required:
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          example: Extract
