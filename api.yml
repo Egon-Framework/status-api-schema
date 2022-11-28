@@ -18,10 +18,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/Pipeline'
         '401':
-          description: Access token is missing or invalid
+          $ref: '#/components/responses/UnauthorizedError'
         '404':
           description: A running pipeline was not found with the given ID
 components:
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
   schemas:
     Pipeline:
       required:
@@ -50,3 +53,11 @@ components:
         name:
           type: string
           example: Extract
+  securitySchemes:
+    TokenAuth:
+      type: apiKey
+      in: query
+      name: token
+# Require auth token for all transactions
+security:
+  - TokenAuth: []
