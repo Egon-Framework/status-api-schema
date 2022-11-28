@@ -17,6 +17,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Pipeline'
+        '401':
+          description: Access token is missing or invalid
+        '404':
+          description: A running pipeline was not found with the given ID
 components:
   schemas:
     Pipeline:
