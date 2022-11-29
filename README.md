@@ -1,5 +1,7 @@
 # Egon Status API
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/764136354b644e5bb1bb8e0ed1fb35fe)](https://app.codacy.com/gh/Egon-Framework/status-api?utm_source=github.com&utm_medium=referral&utm_content=Egon-Framework/status-api&utm_campaign=Badge_Grade_Settings)
+
 The status API is responsible for exposing Egon metrics for use by the Egon visualization dashboard.
 This repository defines the API specification and provides documentation for spinning up local development instances.
 
