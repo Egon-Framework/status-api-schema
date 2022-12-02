@@ -7,13 +7,27 @@ info:
     For more information, checkout the source code [on GitHub](https://github.com/Egon-Framework/status-api)
   version: 0.0.1
 tags:
-  - name: Metadata
+  - name: System Status
+    description: Retrieve information concerning the Egon API backend
+  - name: Pipeline Metadata
     description: Metadata and status information for currently running pipeline components
 paths:
+  /health:
+    get:
+      tags:
+        - System Status
+      summary: API health check
+      description: Check the status of the API
+      operationId: healthCheck
+      responses:
+        '200':
+          description: OK
   /pipeline/{pipelineId}:
     get:
       tags:
-        - Metadata
+        - Pipeline Metadata
+      security:
+        - TokenAuth: [ ]
       summary: Get pipeline metadata
       description: Get metadata for a currently running pipeline by its ID
       operationId: getPipelineById
@@ -42,7 +56,9 @@ paths:
   /node/{nodeID}:
     get:
       tags:
-        - Metadata
+        - Pipeline Metadata
+      security:
+        - TokenAuth: [ ]
       summary: Get node metadata
       description: Get metadata for a single pipeline node by its ID
       operationId: getNodeById
@@ -156,6 +172,3 @@ components:
       type: apiKey
       in: query
       name: token
-# Require auth token for all transactions
-security:
-  - TokenAuth: [ ]
