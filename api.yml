@@ -94,27 +94,44 @@ components:
       value:
         id: "0x7f5023953990"
         name: Extract
+        description: Load data into the pipeline
+        instances: 1
+        status: stopped
     TransformNode:
       summary: Transform node in an ETL pipeline
       value:
         id: "0x7f50239539b0"
         name: Transform
+        description: Transform and analyze pipeline data
+        instances: 4
+        status: running
     LoadNode:
       summary: The load step in an ETL pipeline
       value:
         id: "0x7f502385e910"
         name: Load
+        instances: 2
+        status: running
   schemas:
     Node:
       required:
         - id
         - name
+        - instances
+        - status
       type: object
       properties:
         id:
           type: string
         name:
           type: string
+        description:
+          type: string
+        instances:
+          type: integer
+        status:
+          type: string
+          enum: [ 'running', 'stopped', 'errored', 'launching', 'unknown' ]
       example:
         $ref: '#/components/examples/ExtractNode/value'
     Pipeline:
