@@ -9,9 +9,13 @@ info:
 tags:
   - name: Metadata
     description: Metadata and status information for currently running pipeline components
+  - name: System Status
+    description: Retrieve information concerning the Egon API backend
 paths:
   /health:
     get:
+      tags:
+        - System Status
       summary: API health check
       description: Check the status of the API
       operationId: healthCheck
