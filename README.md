@@ -9,7 +9,7 @@ This repository defines the API specification and provides documentation for spi
 The API is defined using the [OpenAPI](https://www.openapis.org/) specification (formally called _swagger_).
 Suitable examples are included in the specification for running a small development server.
 
-## Working on a Local Development
+## Setting Up Local Development
 
 The following sections provide instructions for setting up a simple development environment.
 
