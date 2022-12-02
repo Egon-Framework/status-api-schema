@@ -10,10 +10,20 @@ tags:
   - name: Metadata
     description: Metadata and status information for currently running pipeline components
 paths:
+  /health:
+    get:
+      summary: API health check
+      description: Check the status of the API
+      operationId: healthCheck
+      responses:
+        '200':
+          description: OK
   /pipeline/{pipelineId}:
     get:
       tags:
         - Metadata
+      security:
+        - TokenAuth: [ ]
       summary: Get pipeline metadata
       description: Get metadata for a currently running pipeline by its ID
       operationId: getPipelineById
@@ -43,6 +53,8 @@ paths:
     get:
       tags:
         - Metadata
+      security:
+        - TokenAuth: [ ]
       summary: Get node metadata
       description: Get metadata for a single pipeline node by its ID
       operationId: getNodeById
@@ -156,6 +168,3 @@ components:
       type: apiKey
       in: query
       name: token
-# Require auth token for all transactions
-security:
-  - TokenAuth: [ ]
