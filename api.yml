@@ -46,7 +46,7 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedError'
         '404':
-          description: A running pipeline was not found with the given ID
+          $ref: '#/components/responses/MissingResourceError'
   /node/{nodeID}:
     get:
       tags:
@@ -85,10 +85,16 @@ paths:
                   value:
                     id: "0x7f502385e910"
                     name: Load
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/MissingResourceError'
 components:
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid
+    MissingResourceError:
+      description: A running resource was not found with the given ID
   schemas:
     Pipeline:
       required:
