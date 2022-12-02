@@ -1,0 +1,16 @@
+name: OpenAPI Standard
+
+on:
+  push:
+
+jobs:
+  build:
+    name: Run Spectral
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - uses: stoplightio/spectral-action@latest
+        with:
+          file_glob: '*.yaml'
