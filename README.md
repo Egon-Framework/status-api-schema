@@ -3,16 +3,15 @@
 [![Documentation](https://github.com/Egon-Framework/status-api/actions/workflows/Documentation.yml/badge.svg)](https://github.com/Egon-Framework/status-api/actions/workflows/Documentation.yml)
 [![OpenAPI Standard](https://github.com/Egon-Framework/status-api/actions/workflows/OpenAPI.yml/badge.svg)](https://github.com/Egon-Framework/status-api/actions/workflows/OpenAPI.yml)
 
-The status API is responsible for exposing Egon metrics for use by the Egon visualization dashboard.
-This repository defines the API specification and provides documentation for spinning up local development instances.
+The status API is responsible for exposing Egon system and pipeline metrics.
+This repository defines the API specification and provides documentation for spinning up a local development instance.
 
 The API is defined using the [OpenAPI](https://www.openapis.org/) specification (formally called _swagger_).
 Suitable examples are included in the specification for running a small development server.
 
-## Working on a Local Machine
+## Working on a Local Development
 
-This project doesn't require any special configuration or setup.
-For convenience, instructions are provided for getting a simple development environment up and running.
+The following sections provide instructions for setting up a simple development environment.
 
 ### API Editing
 
@@ -26,7 +25,7 @@ docker pull swaggerapi/swagger-editor
 docker run -d -p 8080:8080 swaggerapi/swagger-editor
 ```
 
-### Running a Dev Server
+### Running a Mock Server
 
 A mock API instance can be spun up using [prism](https://docs.stoplight.io/docs/prism/674b27b261c3c-overview).
 Install the utility with `npm`:
@@ -42,8 +41,26 @@ prism mock api.yml
 ```
 
 When performing queries against the mock session, don't forget to provide a dummy auth token.
-When running a mock server, any token value will work.
+For the mock server instance, any token value will work.
 
 ```bash
 curl  http://127.0.0.1:4010/pipeline/123?token=1234
 ```
+
+### Previewing the Documentation
+
+A local documentation preview can be generated using the [elements](https://stoplight.io/open-source/elements) utility.
+Install the utility with `npm`:
+
+```bash
+npm install -g @skriptfabrik/elements-cli
+```
+
+Use the `preview` command to launch a live preview.
+By specifying the `-w` argument, elements will watch for file changes and automatically reload the documentation.
+
+```bash
+elements preview -w api.yml
+```
+
+By default, the documentation will be accessible on [http://localhost:8000/](http://localhost:8000/).
