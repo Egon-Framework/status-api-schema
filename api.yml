@@ -69,6 +69,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Node'
+              examples:
+                extract:
+                  summary: The extract step in an ETL pipeline
+                  value:
+                    id: "0x7f5023953990"
+                    name: Extract
+                transform:
+                  summary: The transform step in an ETL pipeline
+                  value:
+                    id: "0x7f50239539b0"
+                    name: Transform
+                load:
+                  summary: The load step in an ETL pipeline
+                  value:
+                    id: "0x7f502385e910"
+                    name: Load
 components:
   responses:
     UnauthorizedError:
@@ -106,4 +122,4 @@ components:
       name: token
 # Require auth token for all transactions
 security:
-  - TokenAuth: [ ]
+  - TokenAuth: []
