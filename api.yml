@@ -121,6 +121,9 @@ components:
       value:
         id: "0x7f50239539d0"
         name: ETL Pipeline
+        description: An ETL pipeline with three nodes
+        launched: 2020-07-21T17:32:28Z
+        status: running
         nodes: [
           $ref: '#/components/examples/ExtractNode/value',
           $ref: '#/components/examples/TransformNode/value',
@@ -177,13 +180,16 @@ components:
           type: integer
         status:
           type: string
-          enum: [ 'running', 'stopped', 'errored', 'launching', 'unknown' ]
+          enum: [ 'launching', 'running', 'finished', 'errored', 'unknown' ]
       example:
         $ref: '#/components/examples/ExtractNode/value'
     Pipeline:
       required:
         - id
         - name
+        - description
+        - launched
+        - status
         - nodes
       type: object
       properties:
@@ -191,6 +197,15 @@ components:
           type: string
         name:
           type: string
+        description:
+          type: string
+        launched:
+          type: string
+          format: date-time
+          pattern: $\d4-\d2-\d2-\d2:\d2:\d2$
+        status:
+          type: string
+          enum: [ 'launching', 'running', 'finished', 'degraded', 'errored', 'unknown' ]
         nodes:
           type: array
           items:
