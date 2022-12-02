@@ -20,12 +20,6 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v3
 
-      - name: Set up Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: 'npm'
-
       - name: Install elements
         run: npm install @skriptfabrik/elements-cli
 
