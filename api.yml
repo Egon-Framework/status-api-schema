@@ -7,15 +7,15 @@ info:
     For more information, checkout the source code [on GitHub](https://github.com/Egon-Framework/status-api)
   version: 0.0.1
 tags:
-  - name: metrics
+  - name: Metadata
     description: Metadata and status information for currently running pipeline components
 paths:
   /pipeline/{pipelineId}:
     get:
       tags:
-        - metrics
-      summary: Return pipeline metadata by pipeline ID
-      description: Returns information for a currently running pipeline
+        - Metadata
+      summary: Get pipeline metadata
+      description: Get metadata for a currently running pipeline by its ID
       operationId: getPipelineById
       parameters:
         - name: pipelineId
@@ -34,15 +34,7 @@ paths:
                 $ref: '#/components/schemas/Pipeline'
               examples:
                 etl:
-                  summary: A generic ETL Pipeline
-                  value:
-                    id: "0x7f50239539d0"
-                    name: ETL Pipeline
-                    nodes: [
-                      { id: "0x7f5023953990", name: Extract },
-                      { id: "0x7f50239539b0", name: Transform },
-                      { id: "0x7f502385e910", name: Load },
-                    ]
+                  $ref: '#/components/examples/ETLPipeline'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
         '404':
@@ -50,9 +42,9 @@ paths:
   /node/{nodeID}:
     get:
       tags:
-        - metrics
-      summary: Return node metadata by node ID
-      description: Returns information for a single pipeline node
+        - Metadata
+      summary: Get node metadata
+      description: Get metadata for a single pipeline node by its ID
       operationId: getNodeById
       parameters:
         - name: nodeID
@@ -71,20 +63,11 @@ paths:
                 $ref: '#/components/schemas/Node'
               examples:
                 extract:
-                  summary: The extract step in an ETL pipeline
-                  value:
-                    id: "0x7f5023953990"
-                    name: Extract
+                  $ref: '#/components/examples/ExtractNode'
                 transform:
-                  summary: The transform step in an ETL pipeline
-                  value:
-                    id: "0x7f50239539b0"
-                    name: Transform
+                  $ref: '#/components/examples/TransformNode'
                 load:
-                  summary: The load step in an ETL pipeline
-                  value:
-                    id: "0x7f502385e910"
-                    name: Load
+                  $ref: '#/components/examples/LoadNode'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
         '404':
@@ -95,7 +78,45 @@ components:
       description: Access token is missing or invalid
     MissingResourceError:
       description: A running resource was not found with the given ID
+  examples:
+    ETLPipeline:
+      summary: A generic ETL Pipeline
+      value:
+        id: "0x7f50239539d0"
+        name: ETL Pipeline
+        nodes: [
+          $ref: '#/components/examples/ExtractNode/value',
+          $ref: '#/components/examples/TransformNode/value',
+          $ref: '#/components/examples/LoadNode/value',
+        ]
+    ExtractNode:
+      summary: Extract node for an ETL pipeline
+      value:
+        id: "0x7f5023953990"
+        name: Extract
+    TransformNode:
+      summary: Transform node in an ETL pipeline
+      value:
+        id: "0x7f50239539b0"
+        name: Transform
+    LoadNode:
+      summary: The load step in an ETL pipeline
+      value:
+        id: "0x7f502385e910"
+        name: Load
   schemas:
+    Node:
+      required:
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      example:
+        $ref: '#/components/examples/ExtractNode/value'
     Pipeline:
       required:
         - id
@@ -111,16 +132,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Node'
-    Node:
-      required:
-        - id
-        - name
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
+      example:
+        $ref: '#/components/examples/ETLPipeline/value'
   securitySchemes:
     TokenAuth:
       type: apiKey
@@ -128,4 +141,4 @@ components:
       name: token
 # Require auth token for all transactions
 security:
-  - TokenAuth: []
+  - TokenAuth: [ ]
