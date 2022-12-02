@@ -7,14 +7,14 @@ info:
     For more information, checkout the source code [on GitHub](https://github.com/Egon-Framework/status-api)
   version: 0.0.1
 tags:
-  - name: pipeline
-    description: The structure and status of a running pipeline
+  - name: metrics
+    description: Metadata and status information for currently running pipeline components
 paths:
   /pipeline/{pipelineId}:
     get:
       tags:
-        - pipeline
-      summary: Return pipeline data by ID
+        - metrics
+      summary: Return pipeline metadata by pipeline ID
       description: Returns information for a currently running pipeline
       operationId: getPipelineById
       parameters:
@@ -47,6 +47,28 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         '404':
           description: A running pipeline was not found with the given ID
+  /node/{nodeID}:
+    get:
+      tags:
+        - metrics
+      summary: Return node metadata by node ID
+      description: Returns information for a single pipeline node
+      operationId: getNodeById
+      parameters:
+        - name: nodeID
+          in: path
+          description: Node ID to return data for
+          required: true
+          schema:
+            type: integer
+            format: int
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Node'
 components:
   responses:
     UnauthorizedError:
@@ -84,4 +106,4 @@ components:
       name: token
 # Require auth token for all transactions
 security:
-  - TokenAuth: []
+  - TokenAuth: [ ]
