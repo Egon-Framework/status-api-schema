@@ -7,10 +7,10 @@ info:
     For more information, checkout the source code [on GitHub](https://github.com/Egon-Framework/status-api)
   version: 0.0.1
 tags:
-  - name: Metadata
-    description: Metadata and status information for currently running pipeline components
   - name: System Status
     description: Retrieve information concerning the Egon API backend
+  - name: Pipeline Metadata
+    description: Metadata and status information for currently running pipeline components
 paths:
   /health:
     get:
@@ -25,7 +25,7 @@ paths:
   /pipeline/{pipelineId}:
     get:
       tags:
-        - Metadata
+        - Pipeline Metadata
       security:
         - TokenAuth: [ ]
       summary: Get pipeline metadata
@@ -56,7 +56,7 @@ paths:
   /node/{nodeID}:
     get:
       tags:
-        - Metadata
+        - Pipeline Metadata
       security:
         - TokenAuth: [ ]
       summary: Get node metadata
