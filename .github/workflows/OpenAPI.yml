@@ -13,4 +13,4 @@ jobs:
 
       - uses: stoplightio/spectral-action@latest
         with:
-          file_glob: /*.yaml
+          file_glob: /*.ya?ml
