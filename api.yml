@@ -7,15 +7,15 @@ info:
     For more information, checkout the source code [on GitHub](https://github.com/Egon-Framework/status-api)
   version: 0.0.1
 tags:
-  - name: pipeline
-    description: The structure and status of a running pipeline
+  - name: Metadata
+    description: Metadata and status information for currently running pipeline components
 paths:
   /pipeline/{pipelineId}:
     get:
       tags:
-        - pipeline
-      summary: Return pipeline data by ID
-      description: Returns information for a currently running pipeline
+        - Metadata
+      summary: Get pipeline metadata
+      description: Get metadata for a currently running pipeline by its ID
       operationId: getPipelineById
       parameters:
         - name: pipelineId
@@ -34,24 +34,106 @@ paths:
                 $ref: '#/components/schemas/Pipeline'
               examples:
                 etl:
-                  summary: A generic ETL Pipeline
-                  value:
-                    id: "0x7f50239539d0"
-                    name: ETL Pipeline
-                    nodes: [
-                      { id: "0x7f5023953990", name: Extract },
-                      { id: "0x7f50239539b0", name: Transform },
-                      { id: "0x7f502385e910", name: Load },
-                    ]
+                  $ref: '#/components/examples/ETLPipeline'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
         '404':
-          description: A running pipeline was not found with the given ID
+          $ref: '#/components/responses/MissingResourceError'
+  /node/{nodeID}:
+    get:
+      tags:
+        - Metadata
+      summary: Get node metadata
+      description: Get metadata for a single pipeline node by its ID
+      operationId: getNodeById
+      parameters:
+        - name: nodeID
+          in: path
+          description: Node ID to return data for
+          required: true
+          schema:
+            type: integer
+            format: int
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Node'
+              examples:
+                extract:
+                  $ref: '#/components/examples/ExtractNode'
+                transform:
+                  $ref: '#/components/examples/TransformNode'
+                load:
+                  $ref: '#/components/examples/LoadNode'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/MissingResourceError'
 components:
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid
+    MissingResourceError:
+      description: A running resource was not found with the given ID
+  examples:
+    ETLPipeline:
+      summary: A generic ETL Pipeline
+      value:
+        id: "0x7f50239539d0"
+        name: ETL Pipeline
+        nodes: [
+          $ref: '#/components/examples/ExtractNode/value',
+          $ref: '#/components/examples/TransformNode/value',
+          $ref: '#/components/examples/LoadNode/value',
+        ]
+    ExtractNode:
+      summary: Extract node for an ETL pipeline
+      value:
+        id: "0x7f5023953990"
+        name: Extract
+        description: Load data into the pipeline
+        instances: 1
+        status: stopped
+    TransformNode:
+      summary: Transform node in an ETL pipeline
+      value:
+        id: "0x7f50239539b0"
+        name: Transform
+        description: Transform and analyze pipeline data
+        instances: 4
+        status: running
+    LoadNode:
+      summary: The load step in an ETL pipeline
+      value:
+        id: "0x7f502385e910"
+        name: Load
+        instances: 2
+        status: running
   schemas:
+    Node:
+      required:
+        - id
+        - name
+        - instances
+        - status
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        instances:
+          type: integer
+        status:
+          type: string
+          enum: [ 'running', 'stopped', 'errored', 'launching', 'unknown' ]
+      example:
+        $ref: '#/components/examples/ExtractNode/value'
     Pipeline:
       required:
         - id
@@ -67,16 +149,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Node'
-    Node:
-      required:
-        - id
-        - name
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
+      example:
+        $ref: '#/components/examples/ETLPipeline/value'
   securitySchemes:
     TokenAuth:
       type: apiKey
@@ -84,4 +158,4 @@ components:
       name: token
 # Require auth token for all transactions
 security:
-  - TokenAuth: []
+  - TokenAuth: [ ]
