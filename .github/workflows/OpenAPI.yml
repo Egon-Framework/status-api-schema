@@ -1,0 +1,19 @@
+name: OpenAPI Standard
+
+on:
+  push:
+
+jobs:
+  build:
+    name: Run Spectral
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Run Spectral Lint
+        uses: addnab/docker-run-action@v3
+        with:
+          image: stoplight/spectral:latest
+          options: -v ${{ github.workspace }}:${{ github.workspace }} -w ${{ github.workspace }}
+          run: spectral lint --ruleset ./.github/workflows/.spectral.yml *.yml
