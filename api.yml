@@ -1,17 +1,42 @@
 openapi: 3.0.3
 info:
   title: Egon Status API
+  version: 0.0.1
+  contact:
+    url: https://github.com/Egon-Framework/status-api
   description: |-
     API specification for monitoring the Egon Framework.
     
     For more information, checkout the source code [on GitHub](https://github.com/Egon-Framework/status-api)
-  version: 0.0.1
+servers:
+  - url: https://{url}/V0
+    variables:
+      url:
+        default: localhost
+        description: The base API URL
 tags:
+  - name: Documentation
+    description: Endpoints that direct users to the documentation or other helpful information
   - name: System Status
     description: Retrieve information concerning the Egon API backend
   - name: Pipeline Metadata
     description: Metadata and status information for currently running pipeline components
 paths:
+  /:
+    get:
+      tags:
+        - Documentation
+      summary: Base API URL
+      description: The base API URL pointing users at the documentation
+      operationId: root
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'The Egon Framework status API. See https://egon-framework.github.io/status-api/ for more details.'
   /health:
     get:
       tags:
@@ -31,7 +56,7 @@ paths:
       operationId: version
       responses:
         '200':
-          description: success
+          description: OK
           content:
             application/json:
               schema:
@@ -57,7 +82,7 @@ paths:
             type: string
       responses:
         '200':
-          description: success
+          description: OK
           content:
             application/json:
               schema:
@@ -87,7 +112,7 @@ paths:
             type: string
       responses:
         '200':
-          description: success
+          description: OK
           content:
             application/json:
               schema:
@@ -123,9 +148,16 @@ components:
         launched: 2020-07-21T17:32:28Z
         status: running
         nodes: [
-          $ref: '#/components/examples/ExtractNode/value',
-          $ref: '#/components/examples/TransformNode/value',
-          $ref: '#/components/examples/LoadNode/value',
+          {
+            node: "0x7f5023953990",
+            downstream: [ "0x7f50239539b0" ]
+          },{
+            node: "0x7f50239539b0",
+            downstream: [ "0x7f502385e910" ]
+          },{
+            node: "0x7f502385e910",
+            downstream: [ ]
+          },
         ]
     ExtractNode:
       summary: Extract node for an ETL pipeline
@@ -180,7 +212,7 @@ components:
           type: integer
         status:
           type: string
-          enum: [ 'launching', 'running', 'finished', 'errored', 'unknown' ]
+          enum: [ 'launching', 'running', 'stopped', 'errored', 'unknown' ]
       example:
         $ref: '#/components/examples/ExtractNode/value'
     # Meta data for a given pipeline
@@ -203,23 +235,25 @@ components:
         launched:
           type: string
           format: date-time
-          pattern: $\d4-\d2-\d2-\d2:\d2:\d2$
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$
         status:
           type: string
-          enum: [ 'launching', 'running', 'finished', 'degraded', 'errored', 'unknown' ]
+          enum: [ 'launching', 'running', 'stopped', 'degraded', 'errored', 'unknown' ]
         nodes: # Mapping of pipeline node IDs to downstream node IDs
-          type: object
-          required:
-            - node
-            - downstream
-          properties:
-            node:
-              type: string
-            downstream:
-              type: array
-              items:
+          type: array
+          items:
+            type: object
+            required:
+              - node
+              - downstream
+            properties:
+              node:
                 type: string
-              uniqueItems: true
+              downstream:
+                type: array
+                items:
+                  type: string
+                uniqueItems: true
       example:
         $ref: '#/components/examples/ETLPipeline/value'
   securitySchemes:
