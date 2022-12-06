@@ -4,45 +4,42 @@
 [![OpenAPI Standard](https://github.com/Egon-Framework/status-api/actions/workflows/OpenAPI.yml/badge.svg)](https://github.com/Egon-Framework/status-api/actions/workflows/OpenAPI.yml)
 
 The status API is responsible for exposing Egon metrics for use by the Egon visualization dashboard.
-This repository defines the API specification and provides documentation for spinning up local development instances.
+This repository defines the API specification and provides documentation for running associated development tasks.
 
 The API is defined using the [OpenAPI](https://www.openapis.org/) specification (formally called _swagger_).
 Suitable examples are included in the specification for running a small development server.
 
-## Working on a Local Machine
+## Development Guidelines
 
-This project doesn't require any special configuration or setup.
-For convenience, instructions are provided for getting a simple development environment up and running.
-
-### API Editing
-
-Many IDEs include utilities for linting the OPENAPI specification.
-If you're looking for a dedicated editing tool, swagger provides
-an [open source editor](https://swagger.io/tools/swagger-editor/).
-You can download and run the dockerized editor using the commands below:
+This project relies on the open source API development stack built by [stoplight](https://stoplight.io/).
+The necessary developer tools can be installed with `npm`:
 
 ```bash
-docker pull swaggerapi/swagger-editor
-docker run -d -p 8080:8080 swaggerapi/swagger-editor
+npm install -g @stoplight/prism-cli @stoplight/spectral
+```
+
+### Linting Standards
+
+Project specific API standards are enforce via `spectral`.
+The following command will validate the API definition against requirements defined in the `.spectral.yml` config file:
+
+```bash
+spectral lint *.yml --fail-severity warn
 ```
 
 ### Running a Dev Server
 
-A mock API instance can be spun up using [prism](https://docs.stoplight.io/docs/prism/674b27b261c3c-overview).
-Install the utility with `npm`:
-
-```bash
-npm install -g @stoplight/prism-cli
-```
-
-Then spin up a local instance as follows:
+A mock API instance can be spun up using [prism](https://docs.stoplight.io/docs/prism/674b27b261c3c-overview):
 
 ```bash
 prism mock api.yml
 ```
 
+The mock server will automatically render responses using the example data contained within the API specification.
+The included examples are limited, but suitable for front-end development purposes.
+
 When performing queries against the mock session, don't forget to provide a dummy auth token.
-When running a mock server, any token value will work.
+When running a mock server, any token value will work. For example:
 
 ```bash
 curl  http://127.0.0.1:4010/pipeline/123?token=1234
