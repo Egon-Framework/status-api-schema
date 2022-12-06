@@ -30,7 +30,7 @@ paths:
       description: Return the version number for the current API
       operationId: version
       responses:
-        200:
+        '200':
           description: success
           content:
             application/json:
@@ -54,8 +54,7 @@ paths:
           description: Pipeline ID to return data for
           required: true
           schema:
-            type: integer
-            format: int
+            type: string
       responses:
         '200':
           description: success
@@ -85,10 +84,9 @@ paths:
           description: Node ID to return data for
           required: true
           schema:
-            type: integer
-            format: int
+            type: string
       responses:
-        200:
+        '200':
           description: success
           content:
             application/json:
@@ -121,6 +119,9 @@ components:
       value:
         id: "0x7f50239539d0"
         name: ETL Pipeline
+        description: An ETL pipeline with three nodes
+        launched: 2020-07-21T17:32:28Z
+        status: running
         nodes: [
           $ref: '#/components/examples/ExtractNode/value',
           $ref: '#/components/examples/TransformNode/value',
@@ -150,6 +151,7 @@ components:
         instances: 2
         status: running
   schemas:
+    # The API version number
     Version:
       required:
         - version
@@ -159,6 +161,7 @@ components:
           pattern: ^\d*\.\d*$
       example:
         $ref: '#/components/examples/Version/value'
+    # Meta data for a given node
     Node:
       required:
         - id
@@ -177,13 +180,17 @@ components:
           type: integer
         status:
           type: string
-          enum: [ 'running', 'stopped', 'errored', 'launching', 'unknown' ]
+          enum: [ 'launching', 'running', 'finished', 'errored', 'unknown' ]
       example:
         $ref: '#/components/examples/ExtractNode/value'
+    # Meta data for a given pipeline
     Pipeline:
       required:
         - id
         - name
+        - description
+        - launched
+        - status
         - nodes
       type: object
       properties:
@@ -191,10 +198,28 @@ components:
           type: string
         name:
           type: string
-        nodes:
-          type: array
-          items:
-            $ref: '#/components/schemas/Node'
+        description:
+          type: string
+        launched:
+          type: string
+          format: date-time
+          pattern: $\d4-\d2-\d2-\d2:\d2:\d2$
+        status:
+          type: string
+          enum: [ 'launching', 'running', 'finished', 'degraded', 'errored', 'unknown' ]
+        nodes: # Mapping of pipeline node IDs to downstream node IDs
+          type: object
+          required:
+            - node
+            - downstream
+          properties:
+            node:
+              type: string
+            downstream:
+              type: array
+              items:
+                type: string
+              uniqueItems: true
       example:
         $ref: '#/components/examples/ETLPipeline/value'
   securitySchemes:
