@@ -32,7 +32,7 @@ spectral lint *.yml --fail-severity warn
 A mock API instance can be spun up using [prism](https://docs.stoplight.io/docs/prism/674b27b261c3c-overview):
 
 ```bash
-prism mock api.yml
+prism mock api.yml -p 4010
 ```
 
 The mock server will automatically render responses using example data contained within the API specification.

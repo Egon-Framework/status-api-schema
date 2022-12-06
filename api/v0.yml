@@ -9,11 +9,15 @@ info:
     
     For more information, checkout the source code [on GitHub](https://github.com/Egon-Framework/status-api)
 servers:
-  - url: https://{url}/V0
+  - url: https://{url}:{port}/V0
+    description: A local development server
     variables:
       url:
         default: localhost
         description: The base API URL
+      port:
+        default: '4010'
+        description: The API port number
 tags:
   - name: Documentation
     description: Endpoints that direct users to the documentation or other helpful information
