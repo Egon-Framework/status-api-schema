@@ -153,6 +153,7 @@ components:
         instances: 2
         status: running
   schemas:
+    # The API version number
     Version:
       required:
         - version
@@ -162,6 +163,7 @@ components:
           pattern: ^\d*\.\d*$
       example:
         $ref: '#/components/examples/Version/value'
+    # Meta data for a given node
     Node:
       required:
         - id
@@ -183,6 +185,7 @@ components:
           enum: [ 'launching', 'running', 'finished', 'errored', 'unknown' ]
       example:
         $ref: '#/components/examples/ExtractNode/value'
+    # Meta data for a given pipeline
     Pipeline:
       required:
         - id
@@ -206,10 +209,19 @@ components:
         status:
           type: string
           enum: [ 'launching', 'running', 'finished', 'degraded', 'errored', 'unknown' ]
-        nodes:
-          type: array
-          items:
-            $ref: '#/components/schemas/Node'
+        nodes: # Mapping of pipeline node IDs to downstream node IDs
+          type: object
+          required:
+            - node
+            - downstream
+          properties:
+            node:
+              type: string
+            downstream:
+              type: array
+              items:
+                type: string
+              uniqueItems: true
       example:
         $ref: '#/components/examples/ETLPipeline/value'
   securitySchemes:
