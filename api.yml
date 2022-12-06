@@ -123,9 +123,16 @@ components:
         launched: 2020-07-21T17:32:28Z
         status: running
         nodes: [
-          $ref: '#/components/examples/ExtractNode/value',
-          $ref: '#/components/examples/TransformNode/value',
-          $ref: '#/components/examples/LoadNode/value',
+          {
+            node: "0x7f5023953990",
+            downstream: [ "0x7f50239539b0" ]
+          },{
+            node: "0x7f50239539b0",
+            downstream: [ "0x7f502385e910" ]
+          },{
+            node: "0x7f502385e910",
+            downstream: [ ]
+          },
         ]
     ExtractNode:
       summary: Extract node for an ETL pipeline
@@ -180,7 +187,7 @@ components:
           type: integer
         status:
           type: string
-          enum: [ 'launching', 'running', 'finished', 'errored', 'unknown' ]
+          enum: [ 'launching', 'running', 'stopped', 'errored', 'unknown' ]
       example:
         $ref: '#/components/examples/ExtractNode/value'
     # Meta data for a given pipeline
@@ -203,23 +210,25 @@ components:
         launched:
           type: string
           format: date-time
-          pattern: $\d4-\d2-\d2-\d2:\d2:\d2$
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$
         status:
           type: string
-          enum: [ 'launching', 'running', 'finished', 'degraded', 'errored', 'unknown' ]
+          enum: [ 'launching', 'running', 'stopped', 'degraded', 'errored', 'unknown' ]
         nodes: # Mapping of pipeline node IDs to downstream node IDs
-          type: object
-          required:
-            - node
-            - downstream
-          properties:
-            node:
-              type: string
-            downstream:
-              type: array
-              items:
+          type: array
+          items:
+            type: object
+            required:
+              - node
+              - downstream
+            properties:
+              node:
                 type: string
-              uniqueItems: true
+              downstream:
+                type: array
+                items:
+                  type: string
+                uniqueItems: true
       example:
         $ref: '#/components/examples/ETLPipeline/value'
   securitySchemes:
