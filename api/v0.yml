@@ -6,11 +6,11 @@ info:
     url: https://github.com/Egon-Framework/status-api
   description: |-
     API specification for monitoring the Egon Framework.
-    
-    For more information, checkout the source code [on GitHub](https://github.com/Egon-Framework/status-api)
+
+    For more information, checkout the project repository [on GitHub](https://github.com/Egon-Framework/status-api).
 servers:
   - url: https://{url}:{port}/V0
-    description: A local development server
+    description: Local development server
     variables:
       url:
         default: localhost
@@ -19,8 +19,8 @@ servers:
         default: '4010'
         description: The API port number
 tags:
-  - name: Documentation
-    description: Endpoints that direct users to the documentation or other helpful information
+  - name: Root URL
+    description: Root API endpoint directing users to the API documentation
   - name: System Status
     description: Retrieve information concerning the Egon API backend
   - name: Pipeline Metadata
@@ -29,9 +29,9 @@ paths:
   /:
     get:
       tags:
-        - Documentation
-      summary: Base API URL
-      description: The base API URL pointing users at the documentation
+        - Root URL
+      summary: Root API URL
+      description: The root API URL has no function other than to point users at the API documentation.
       operationId: root
       responses:
         '200':
@@ -46,7 +46,7 @@ paths:
       tags:
         - System Status
       summary: API health check
-      description: Check the status of the API
+      description: Check the API health status.
       operationId: healthCheck
       responses:
         '200':
@@ -56,7 +56,7 @@ paths:
       tags:
         - System Status
       summary: Fetch the API version
-      description: Return the version number for the current API
+      description: Return the current API version number.
       operationId: version
       responses:
         '200':
@@ -75,7 +75,7 @@ paths:
       security:
         - TokenAuth: [ ]
       summary: Get pipeline metadata
-      description: Get metadata for a currently running pipeline by its ID
+      description: Get metadata for a currently running pipeline by its ID.
       operationId: getPipelineById
       parameters:
         - name: pipelineId
@@ -105,7 +105,7 @@ paths:
       security:
         - TokenAuth: [ ]
       summary: Get node metadata
-      description: Get metadata for a single pipeline node by its ID
+      description: Get metadata for a single pipeline node by its ID.
       operationId: getNodeById
       parameters:
         - name: nodeID
