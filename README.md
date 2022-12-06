@@ -38,7 +38,7 @@ npm install -g @stoplight/prism-cli
 Then spin up a local instance as follows:
 
 ```bash
-prism mock api.yml
+prism mock api.yml -p 4010
 ```
 
 When performing queries against the mock session, don't forget to provide a dummy auth token.
