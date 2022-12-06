@@ -3,7 +3,7 @@
 [![Documentation](https://github.com/Egon-Framework/status-api/actions/workflows/Documentation.yml/badge.svg)](https://github.com/Egon-Framework/status-api/actions/workflows/Documentation.yml)
 [![OpenAPI Standard](https://github.com/Egon-Framework/status-api/actions/workflows/OpenAPI.yml/badge.svg)](https://github.com/Egon-Framework/status-api/actions/workflows/OpenAPI.yml)
 
-The status API is responsible for exposing Egon metrics for use by the Egon visualization dashboard.
+The status API is responsible for exposing Egon runtime metrics for use by the Egon visualization dashboard.
 This repository defines the API specification and provides documentation for running associated development tasks.
 
 The API is defined using the [OpenAPI](https://www.openapis.org/) specification (formally called _swagger_).
@@ -20,8 +20,8 @@ npm install -g @stoplight/prism-cli @stoplight/spectral
 
 ### Linting Standards
 
-Project specific API standards are enforce via `spectral`.
-The following command will validate the API definition against requirements defined in the `.spectral.yml` config file:
+Project specific API standards are enforce using the `spectral` linting utility.
+The following command will validate API definitions against requirements defined in the `.spectral.yml` config file:
 
 ```bash
 spectral lint *.yml --fail-severity warn
@@ -35,11 +35,11 @@ A mock API instance can be spun up using [prism](https://docs.stoplight.io/docs/
 prism mock api.yml
 ```
 
-The mock server will automatically render responses using the example data contained within the API specification.
-The included examples are limited, but suitable for front-end development purposes.
+The mock server will automatically render responses using example data contained within the API specification.
+The included examples are limited, but suitable for most development tasks.
 
 When performing queries against the mock session, don't forget to provide a dummy auth token.
-When running a mock server, any token value will work. For example:
+While running a mock server, any token value will work. For example:
 
 ```bash
 curl  http://127.0.0.1:4010/pipeline/123?token=1234
