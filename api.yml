@@ -2,6 +2,8 @@ openapi: 3.0.3
 info:
   title: Egon Status API
   version: 0.0.1
+  contact:
+    url: https://github.com/Egon-Framework/status-api
   description: |-
     API specification for monitoring the Egon Framework.
     
