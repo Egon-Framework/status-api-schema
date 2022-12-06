@@ -7,11 +7,28 @@ info:
     For more information, checkout the source code [on GitHub](https://github.com/Egon-Framework/status-api)
   version: 0.0.1
 tags:
+  - name: Documentation
+    description: Endpoints that direct users to the documentation or other helpful information
   - name: System Status
     description: Retrieve information concerning the Egon API backend
   - name: Pipeline Metadata
     description: Metadata and status information for currently running pipeline components
 paths:
+  /:
+    get:
+      tags:
+        - Documentation
+      summary: Base API URL
+      description: The base API URL pointing users at the documentation
+      operationId: root
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'The Egon Framework status API. See https://egon-framework.github.io/status-api/ for more details.'
   /health:
     get:
       tags:
@@ -31,7 +48,7 @@ paths:
       operationId: version
       responses:
         '200':
-          description: success
+          description: OK
           content:
             application/json:
               schema:
@@ -57,7 +74,7 @@ paths:
             type: string
       responses:
         '200':
-          description: success
+          description: OK
           content:
             application/json:
               schema:
@@ -87,7 +104,7 @@ paths:
             type: string
       responses:
         '200':
-          description: success
+          description: OK
           content:
             application/json:
               schema:
