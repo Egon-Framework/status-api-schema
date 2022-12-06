@@ -3,45 +3,43 @@
 [![Documentation](https://github.com/Egon-Framework/status-api/actions/workflows/Documentation.yml/badge.svg)](https://github.com/Egon-Framework/status-api/actions/workflows/Documentation.yml)
 [![OpenAPI Standard](https://github.com/Egon-Framework/status-api/actions/workflows/OpenAPI.yml/badge.svg)](https://github.com/Egon-Framework/status-api/actions/workflows/OpenAPI.yml)
 
-The status API is responsible for exposing Egon system and pipeline metrics.
-This repository defines the API specification and provides documentation for spinning up a local development instance.
+The status API is responsible for exposing Egon runtime metrics for use by the Egon visualization dashboard.
+This repository defines the API specification and provides documentation for running associated development tasks.
 
 The API is defined using the [OpenAPI](https://www.openapis.org/) specification (formally called _swagger_).
 Suitable examples are included in the specification for running a small development server.
 
-## Setting Up Local Development
+## Development Guidelines
 
-The following sections provide instructions for setting up a simple development environment.
-
-### API Editing
-
-Many IDEs include utilities for linting the OPENAPI specification.
-If you're looking for a dedicated editing tool, swagger provides
-an [open source editor](https://swagger.io/tools/swagger-editor/).
-You can download and run the dockerized editor using the commands below:
+This project relies on the open source API development stack built by [stoplight](https://stoplight.io/).
+The necessary developer tools can be installed with `npm`:
 
 ```bash
-docker pull swaggerapi/swagger-editor
-docker run -d -p 8080:8080 swaggerapi/swagger-editor
+npm install -g @stoplight/prism-cli @stoplight/spectral
 ```
 
-### Running a Mock Server
+### Linting Standards
 
-A mock API instance can be spun up using [prism](https://docs.stoplight.io/docs/prism/674b27b261c3c-overview).
-Install the utility with `npm`:
+Project specific API standards are enforce using the `spectral` linting utility.
+The following command will validate API definitions against requirements defined in the `.spectral.yml` config file:
 
 ```bash
-npm install -g @stoplight/prism-cli
+spectral lint api/*.yml --fail-severity warn
 ```
 
-Then spin up a local instance as follows:
+### Running a Dev Server
+
+A mock API instance can be spun up using [prism](https://docs.stoplight.io/docs/prism/674b27b261c3c-overview):
 
 ```bash
-prism mock api.yml
+prism mock api/v0.yml -p 4010
 ```
+
+The mock server will automatically render responses using example data contained within the API specification.
+The included examples are limited, but suitable for most development tasks.
 
 When performing queries against the mock session, don't forget to provide a dummy auth token.
-For the mock server instance, any token value will work.
+While running a mock server, any token value will work. For example:
 
 ```bash
 curl  http://127.0.0.1:4010/pipeline/123?token=1234

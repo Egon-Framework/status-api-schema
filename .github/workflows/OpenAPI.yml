@@ -18,4 +18,4 @@ jobs:
         with:
           image: stoplight/spectral:latest
           options: -v ${{ github.workspace }}:${{ github.workspace }} -w ${{ github.workspace }}
-          run: spectral lint --ruleset ./.github/workflows/.spectral.yml *.yml
+          run: spectral lint api/*.yml --fail-severity warn
