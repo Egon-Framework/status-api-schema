@@ -5,9 +5,22 @@ info:
   contact:
     url: https://github.com/Egon-Framework/status-api
   description: |-
-    API specification for monitoring the Egon Framework.
-
-    For more information, checkout the project repository [on GitHub](https://github.com/Egon-Framework/status-api).
+    ## API Overview
+    
+    The status API is a small, read-only API for monitoring Egon pipelines.
+    API endpoints are broken into three categories based on general use case.
+    
+    **System Status** endpoints are provided for checking API health, version, and documentation.
+    These endpoints provide no information about running Egon processes and can be accessed without authentication.
+    
+    **Pipeline Metadata** endpoints expose information about user submitted Egon pipelines.
+    These endpoints are authenticated via API tokens.
+    Each token is tied to an individual pipeline and provides access to information about a single running pipeline.
+    Tokens are valid for the life-time of the associated pipeline and expire once the pipeline is no longer running.
+    
+    **Administrative** endpoints are provided for administrators who need to monitor Egon system status.
+    This includes endpoints for fetching Egon logs and global, high-level metrics.
+    These endpoints are authenticated using a dedicated API key.
 servers:
   - url: https://{url}:{port}/V0
     description: Local development server
@@ -19,8 +32,6 @@ servers:
         default: '4010'
         description: The API port number
 tags:
-  - name: Root URL
-    description: Root API endpoint directing users to the API documentation
   - name: System Status
     description: Retrieve information concerning the Egon API backend
   - name: Pipeline Metadata
@@ -29,9 +40,9 @@ paths:
   /:
     get:
       tags:
-        - Root URL
-      summary: Root API URL
-      description: The root API URL has no function other than to point users at the API documentation.
+        - System Status
+      summary: Base API URL
+      description: The base API URL pointing users at the documentation
       operationId: root
       responses:
         '200':

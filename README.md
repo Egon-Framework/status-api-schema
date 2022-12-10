@@ -9,7 +9,7 @@ This repository defines the API specification and provides documentation for run
 The API is defined using the [OpenAPI](https://www.openapis.org/) specification (formally called _swagger_).
 Suitable examples are included in the specification for running a small development server.
 
-## Development Guidelines
+## Developer Guidelines
 
 This project relies on the open source API development stack built by [stoplight](https://stoplight.io/).
 The necessary developer tools can be installed with `npm`:
@@ -20,7 +20,7 @@ npm install -g @stoplight/prism-cli @stoplight/spectral
 
 ### Linting Standards
 
-Project specific API standards are enforce using the `spectral` linting utility.
+Project specific API standards are enforced using the `spectral` linting utility.
 The following command will validate API definitions against requirements defined in the `.spectral.yml` config file:
 
 ```bash
