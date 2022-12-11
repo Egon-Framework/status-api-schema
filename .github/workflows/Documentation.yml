@@ -20,20 +20,21 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v3
 
-      - name: Generate Swagger UI
-        uses: Legion2/swagger-ui-action@v1
-        with:
-          output: swagger-ui
-          spec-file: api/v0.yml
+      - name: Install elements
+        run: npm install -g @skriptfabrik/elements-cli
+
+      - name: Build documentation
+        run: |
+          mkdir docs
+          elements export api/v0.yml > docs/index.html
 
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: swagger-ui
+          path: docs
 
   deploy:
     name: Publish Documentation
-    if: github.event_name == 'push'
     needs: [ build ]
 
     runs-on: ubuntu-latest
@@ -46,4 +47,5 @@ jobs:
         uses: actions/configure-pages@v2
 
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v1
