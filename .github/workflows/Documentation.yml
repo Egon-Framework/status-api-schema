@@ -26,12 +26,12 @@ jobs:
       - name: Build documentation
         run: |
           mkdir docs
-          elements export api.yml > docs/index.html
+          elements export api/v0.yml > docs/index.html
 
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: elements
+          path: docs
 
   deploy:
     name: Publish Documentation
