@@ -15,12 +15,12 @@ This project relies on the open source API development stack built by [stoplight
 The necessary developer tools can be installed with `npm`:
 
 ```bash
-npm install -g @stoplight/prism-cli @stoplight/spectral
+npm install -g @stoplight/prism-cli @stoplight/spectral @skriptfabrik/elements-cli
 ```
 
 ### Linting Standards
 
-Project specific API standards are enforced using the `spectral` linting utility.
+Project specific API standards are enforced using the [spectral](https://docs.stoplight.io/docs/spectral/) linting utility.
 The following command will validate API definitions against requirements defined in the `.spectral.yml` config file:
 
 ```bash
@@ -29,7 +29,7 @@ spectral lint api/*.yml --fail-severity warn
 
 ### Running a Dev Server
 
-A mock API instance can be spun up using [prism](https://docs.stoplight.io/docs/prism/674b27b261c3c-overview):
+A mock API instance can be spun up using [prism](https://docs.stoplight.io/docs/prism/):
 
 ```bash
 prism mock api/v0.yml -p 4010
@@ -48,17 +48,11 @@ curl  http://127.0.0.1:4010/pipeline/123?token=1234
 ### Previewing the Documentation
 
 A local documentation preview can be generated using the [elements](https://stoplight.io/open-source/elements) utility.
-Install the utility with `npm`:
+Use the `preview` command to launch a live preview:
 
 ```bash
-npm install -g @skriptfabrik/elements-cli
+elements preview -w api/v0.yml
 ```
 
-Use the `preview` command to launch a live preview.
-By specifying the `-w` argument, elements will watch for file changes and automatically reload the documentation.
-
-```bash
-elements preview -w api.yml
-```
-
+When specifying the `-w` argument, `elements` will watch for file changes and automatically reload the documentation.
 By default, the documentation will be accessible on [http://localhost:8000/](http://localhost:8000/).

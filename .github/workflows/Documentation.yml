@@ -1,8 +1,6 @@
 name: Documentation
 
 on:
-  pull_request:
-    branches: [ main ]
   push:
     branches: [ main ]
 
@@ -25,8 +23,21 @@ jobs:
 
       - name: Build documentation
         run: |
-          mkdir docs
-          elements export api/v0.yml > docs/index.html
+          for api_file in api/*.yml
+          do
+            # Get the API version number from file name
+            version=$(basename $api_file .yml)
+            mkdir -p docs/$version/
+            
+            # Put the API specification and the documentation page in the subdirectory
+            cp $api_file docs/$version/api.yml
+            elements export docs/$version/api.yml > docs/$version/index.html
+          done
+          
+          # Copy the latest version to the default webpage
+          # Relies on glob's default alphanumerical sorting
+          cp docs/$version/index.html docs/index.html
+          cp docs/$version/api.yml docs/api.yml
 
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v1
