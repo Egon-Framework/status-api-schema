@@ -27,7 +27,7 @@ The following command will validate API definitions against requirements defined
 spectral lint api/*.yml --fail-severity warn
 ```
 
-### Running a Dev Server
+### Running a Mock Server
 
 A mock API instance can be spun up using [prism](https://docs.stoplight.io/docs/prism/):
 
@@ -36,13 +36,21 @@ prism mock api/v0.yml -p 4010
 ```
 
 The mock server will automatically render responses using example data contained within the API specification.
-The included examples are limited, but suitable for most development tasks.
+The included examples are limited, but suitable for general development tasks.
 
 When performing queries against the mock session, don't forget to provide a dummy auth token.
 While running a mock server, any token value will work. For example:
 
 ```bash
 curl  http://127.0.0.1:4010/pipeline/123?token=1234
+```
+
+### Contract Testing an Existing Server
+
+The `prism` utility can be run in `proxy` mode to validate responses from a running API server.
+
+```bash
+prism proxy api/v0.yml http://localhost:3000 --errors
 ```
 
 ### Previewing the Documentation
