@@ -31,11 +31,13 @@ jobs:
             
             # Put the API specification and the documentation page in the subdirectory
             cp $api_file docs/$version/api.yml
-            elements export docs/$version/api.yml > docs/$version/index.html
+            
+            cd $api_file docs/$version/
+            elements export --no-try-it api.yml > docs/$version/index.html
+            cd ..
           done
           
-          # Copy the latest version to the default webpage
-          # Relies on glob's default alphanumerical sorting
+          # Set the default webpage to the latest version - rely on glob's alphanumerical sorting
           cp docs/$version/index.html docs/index.html
           cp docs/$version/api.yml docs/api.yml
 
