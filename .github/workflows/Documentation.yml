@@ -33,7 +33,7 @@ jobs:
             
             cd docs/$version/
             elements export --no-try-it api.yml > index.html
-            cd ..
+            cd ../..
           done
           
           # Set the default webpage to the latest version - rely on glob's alphanumerical sorting
