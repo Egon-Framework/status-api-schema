@@ -31,7 +31,7 @@ jobs:
             # Put the API specification and the documentation page in the subdirectory
             cp $api_file docs/$version/api.yml
             
-            cd $api_file docs/$version/
+            cd docs/$version/
             elements export --no-try-it api.yml > docs/$version/index.html
             cd ..
           done
