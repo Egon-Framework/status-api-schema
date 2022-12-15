@@ -8,7 +8,7 @@ info:
     ## API Overview
     
     The status API is a small, read-only API for monitoring Egon pipelines.
-    API endpoints are broken into three categories based on general use case.
+    API endpoints are broken into two categories based on general use case.
     
     **System Status** endpoints are provided for checking API health, version, and documentation.
     These endpoints provide no information about running Egon processes and can be accessed without authentication.
@@ -17,10 +17,6 @@ info:
     These endpoints are authenticated via API tokens.
     Each token is tied to an individual pipeline and provides access to information about a single running pipeline.
     Tokens are valid for the life-time of the associated pipeline and expire once the pipeline is no longer running.
-    
-    **Administrative** endpoints are provided for administrators who need to monitor Egon system status.
-    This includes endpoints for fetching Egon logs and global, high-level metrics.
-    These endpoints are authenticated using a dedicated API key.
 servers:
   - url: https://{url}:{port}/V0
     description: Local development server
@@ -33,7 +29,7 @@ servers:
         description: The API port number
 tags:
   - name: System Status
-    description: Retrieve information concerning the Egon API backend
+    description: Retrieve information concerning API health and version
   - name: Pipeline Metadata
     description: Metadata and status information for currently running pipeline components
 paths:
@@ -42,7 +38,7 @@ paths:
       tags:
         - System Status
       summary: Base API URL
-      description: The base API URL pointing users at the documentation
+      description: The base API URL points users at the API documentation.
       operationId: root
       responses:
         '200':
@@ -66,7 +62,7 @@ paths:
     get:
       tags:
         - System Status
-      summary: Fetch the API version
+      summary: Get the API version
       description: Return the current API version number.
       operationId: version
       responses:
@@ -84,7 +80,7 @@ paths:
       tags:
         - Pipeline Metadata
       security:
-        - TokenAuth: [ ]
+        - TokenQueryAuth: [ ]
       summary: Get pipeline metadata
       description: Get metadata for a currently running pipeline by its ID.
       operationId: getPipelineById
@@ -114,7 +110,7 @@ paths:
       tags:
         - Pipeline Metadata
       security:
-        - TokenAuth: [ ]
+        - TokenQueryAuth: [ ]
       summary: Get node metadata
       description: Get metadata for a single pipeline node by its ID.
       operationId: getNodeById
@@ -146,9 +142,9 @@ paths:
 components:
   responses:
     UnauthorizedError:
-      description: Access token is missing or invalid
+      description: Authentication information is missing or invalid
     MissingResourceError:
-      description: A running resource was not found with the given ID
+      description: Resource not found
   examples:
     Version:
       description: Version 0.1
@@ -272,7 +268,11 @@ components:
       example:
         $ref: '#/components/examples/ETLPipeline/value'
   securitySchemes:
-    TokenAuth:
+    TokenQueryAuth:
       type: apiKey
       in: query
-      name: token
+      name: User Token
+      description: |-
+        Credentials generated under this category are temporary and limited in scope.
+        User tokens provide access to information concerning a single running pipeline.
+        Once the associated pipeline is no longer running, the credentials expire.
