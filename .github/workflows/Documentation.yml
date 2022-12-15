@@ -32,7 +32,7 @@ jobs:
             cp $api_file docs/$version/api.yml
             
             cd docs/$version/
-            elements export --no-try-it api.yml > docs/$version/index.html
+            elements export --no-try-it api.yml > index.html
             cd ..
           done
           
