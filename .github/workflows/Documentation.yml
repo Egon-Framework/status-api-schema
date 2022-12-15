@@ -31,13 +31,13 @@ jobs:
             
             # Put the API specification and the documentation page in the subdirectory
             cp $api_file docs/$version/api.yml
-            elements export docs/$version/api.yml > docs/$version/index.html
+            
+            (cd docs/$version/ && elements export --title="Egon Status API $version" --base-path=status-api/$version/ --no-try-it api.yml > index.html)
           done
           
-          # Copy the latest version to the default webpage
-          # Relies on glob's default alphanumerical sorting
-          cp docs/$version/index.html docs/index.html
-          cp docs/$version/api.yml docs/api.yml
+          # Set the default webpage to the latest version - rely on glob's alphanumerical sorting
+          cp $api_file docs/api.yml
+          (cd docs && elements export --title="Egon Status API $version" --base-path=status-api --no-try-it api.yml > index.html)
 
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v1
