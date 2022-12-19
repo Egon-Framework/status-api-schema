@@ -159,16 +159,26 @@ components:
         launched: 2020-07-21T17:32:28Z
         status: running
         nodes: [
+          760c45a4-9a65-418f-a442-aa8c3f22cad2,
+          1da5a095-00af-45fe-ba1b-ea9576439f75,
+          ae3de17e-1c7a-4817-b619-b5aa984ffe51,
+        ]
+        edges: [
           {
-            node: 760c45a4-9a65-418f-a442-aa8c3f22cad2,
-            downstream: [ 1da5a095-00af-45fe-ba1b-ea9576439f75 ]
-          },{
-            node: 1da5a095-00af-45fe-ba1b-ea9576439f75,
-            downstream: [ ae3de17e-1c7a-4817-b619-b5aa984ffe51 ]
-          },{
-            node: ae3de17e-1c7a-4817-b619-b5aa984ffe51,
-            downstream: [ ]
-          },
+            upstream_node: 760c45a4-9a65-418f-a442-aa8c3f22cad2,
+            output_id: 9e572320-02be-4d79-bd17-f63ea2489c1f,
+            output_name: raw_data_output,
+            downstream_node: 1da5a095-00af-45fe-ba1b-ea9576439f75,
+            input_id: 6e4524b6-2997-4a21-a49b-228b88ba5c5b,
+            input_name: raw_data_output,
+          },           {
+            upstream_node: 1da5a095-00af-45fe-ba1b-ea9576439f75,
+            output_id: afaeb28d-d31a-4c42-a47f-41fd414f9504,
+            output_name: processed_data_output,
+            downstream_node: ae3de17e-1c7a-4817-b619-b5aa984ffe51,
+            input_id: d645dd0e-8942-46dd-8d2c-01f2b7bba946,
+            input_name: processed_data_output,
+          }
         ]
     ExtractNode:
       summary: Extract node for an ETL pipeline
@@ -225,6 +235,32 @@ components:
           enum: [ 'launching', 'running', 'stopped', 'degraded', 'errored', 'unknown' ]
       example:
         $ref: '#/components/examples/ExtractNode/value'
+    Connection: # Relationship between two individual nodes
+      required:
+        - upstream_node
+        - output_id
+        - output_name
+        - downstream_node
+        - input_id
+        - input_name
+      type: object
+      properties:
+        upstream_node:
+          type: string
+          pattern: ^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
+        output_id:
+          type: string
+          pattern: ^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
+        output_name:
+          type: string
+        downstream_node:
+          type: string
+          pattern: ^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
+        input_id:
+          type: string
+          pattern: ^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
+        input_name:
+          type: string
     Pipeline: # Meta data for a given pipeline
       required:
         - id
@@ -252,20 +288,12 @@ components:
         nodes: # Mapping of pipeline node IDs to downstream node IDs
           type: array
           items:
-            type: object
-            required:
-              - node
-              - downstream
-            properties:
-              node:
-                type: string
-                pattern: ^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
-              downstream:
-                type: array
-                items:
-                  type: string
-                  pattern: ^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
-                uniqueItems: true
+            type: string
+            pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$
+        edges:
+          type: array
+          items:
+            $ref: '#/components/schemas/Connection'
       example:
         $ref: '#/components/examples/ETLPipeline/value'
   securitySchemes:
@@ -274,6 +302,6 @@ components:
       in: query
       name: User Token
       description: |-
-        Credentials generated under this category are temporary and limited in scope.
+        API tokens are temporary and limited in scope.
         User tokens provide access to information concerning a single running pipeline.
         Once the associated pipeline is no longer running, the credentials expire.
