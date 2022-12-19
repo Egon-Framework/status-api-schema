@@ -194,8 +194,7 @@ components:
         instances: 2
         status: running
   schemas:
-    # The API version number
-    Version:
+    Version: # The API version number
       required:
         - version
       properties:
@@ -204,8 +203,7 @@ components:
           pattern: ^\d*\.\d*$
       example:
         $ref: '#/components/examples/Version/value'
-    # Meta data for a given node
-    Node:
+    Node: # Meta data for a given node
       required:
         - id
         - name
@@ -215,6 +213,7 @@ components:
       properties:
         id:
           type: string
+          pattern: ^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
         name:
           type: string
         description:
@@ -223,11 +222,10 @@ components:
           type: integer
         status:
           type: string
-          enum: [ 'launching', 'running', 'stopped', 'errored', 'unknown' ]
+          enum: [ 'launching', 'running', 'stopped', 'degraded', 'errored', 'unknown' ]
       example:
         $ref: '#/components/examples/ExtractNode/value'
-    # Meta data for a given pipeline
-    Pipeline:
+    Pipeline: # Meta data for a given pipeline
       required:
         - id
         - name
@@ -239,6 +237,7 @@ components:
       properties:
         id:
           type: string
+          pattern: ^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
         name:
           type: string
         description:
@@ -260,10 +259,12 @@ components:
             properties:
               node:
                 type: string
+                pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$
               downstream:
                 type: array
                 items:
                   type: string
+                  pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$
                 uniqueItems: true
       example:
         $ref: '#/components/examples/ETLPipeline/value'
