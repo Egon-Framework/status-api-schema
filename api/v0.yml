@@ -101,6 +101,8 @@ paths:
               examples:
                 etl:
                   $ref: '#/components/examples/ETLPipeline'
+                multi-node:
+                  $ref: '#/components/examples/MultiNodePipeline'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
         '404':
