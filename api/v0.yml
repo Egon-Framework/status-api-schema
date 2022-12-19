@@ -153,27 +153,27 @@ components:
     ETLPipeline:
       summary: A generic ETL Pipeline
       value:
-        id: "0x7f50239539d0"
+        id: "57d92d7e-58c0-48ec-bed2-2e8b507161bb"
         name: ETL Pipeline
         description: An ETL pipeline with three nodes
         launched: 2020-07-21T17:32:28Z
         status: running
         nodes: [
           {
-            node: "0x7f5023953990",
-            downstream: [ "0x7f50239539b0" ]
+            node: 760c45a4-9a65-418f-a442-aa8c3f22cad2,
+            downstream: [ 1da5a095-00af-45fe-ba1b-ea9576439f75 ]
           },{
-            node: "0x7f50239539b0",
-            downstream: [ "0x7f502385e910" ]
+            node: 1da5a095-00af-45fe-ba1b-ea9576439f75,
+            downstream: [ ae3de17e-1c7a-4817-b619-b5aa984ffe51 ]
           },{
-            node: "0x7f502385e910",
+            node: ae3de17e-1c7a-4817-b619-b5aa984ffe51,
             downstream: [ ]
           },
         ]
     ExtractNode:
       summary: Extract node for an ETL pipeline
       value:
-        id: "0x7f5023953990"
+        id: 760c45a4-9a65-418f-a442-aa8c3f22cad2
         name: Extract
         description: Load data into the pipeline
         instances: 1
@@ -181,7 +181,7 @@ components:
     TransformNode:
       summary: Transform node in an ETL pipeline
       value:
-        id: "0x7f50239539b0"
+        id: 1da5a095-00af-45fe-ba1b-ea9576439f75
         name: Transform
         description: Transform and analyze pipeline data
         instances: 4
@@ -189,7 +189,7 @@ components:
     LoadNode:
       summary: The load step in an ETL pipeline
       value:
-        id: "0x7f502385e910"
+        id: ae3de17e-1c7a-4817-b619-b5aa984ffe51
         name: Load
         instances: 2
         status: running
