@@ -150,36 +150,6 @@ components:
       description: Version 0.1
       value:
         version: "0.1"
-    ETLPipeline:
-      summary: A generic ETL Pipeline
-      value:
-        id: "57d92d7e-58c0-48ec-bed2-2e8b507161bb"
-        name: ETL Pipeline
-        description: An ETL pipeline with three nodes
-        launched: 2020-07-21T17:32:28Z
-        status: running
-        nodes: [
-          760c45a4-9a65-418f-a442-aa8c3f22cad2,
-          1da5a095-00af-45fe-ba1b-ea9576439f75,
-          ae3de17e-1c7a-4817-b619-b5aa984ffe51,
-        ]
-        edges: [
-          {
-            upstream_node: 760c45a4-9a65-418f-a442-aa8c3f22cad2,
-            output_id: 9e572320-02be-4d79-bd17-f63ea2489c1f,
-            output_name: raw_data_output,
-            downstream_node: 1da5a095-00af-45fe-ba1b-ea9576439f75,
-            input_id: 6e4524b6-2997-4a21-a49b-228b88ba5c5b,
-            input_name: raw_data_output,
-          },           {
-            upstream_node: 1da5a095-00af-45fe-ba1b-ea9576439f75,
-            output_id: afaeb28d-d31a-4c42-a47f-41fd414f9504,
-            output_name: processed_data_output,
-            downstream_node: ae3de17e-1c7a-4817-b619-b5aa984ffe51,
-            input_id: d645dd0e-8942-46dd-8d2c-01f2b7bba946,
-            input_name: processed_data_output,
-          }
-        ]
     ExtractNode:
       summary: Extract node for an ETL pipeline
       value:
@@ -203,6 +173,83 @@ components:
         name: Load
         instances: 2
         status: running
+    ETLPipeline:
+      summary: A generic ETL Pipeline
+      value:
+        id: 57d92d7e-58c0-48ec-bed2-2e8b507161bb
+        name: ETL Pipeline
+        description: An example ETL pipeline with three nodes.
+        launched: 2020-07-21T17:32:28Z
+        status: running
+        nodes: [
+          760c45a4-9a65-418f-a442-aa8c3f22cad2,
+          1da5a095-00af-45fe-ba1b-ea9576439f75,
+          ae3de17e-1c7a-4817-b619-b5aa984ffe51,
+        ]
+        edges: [
+          {
+            upstream_node: 760c45a4-9a65-418f-a442-aa8c3f22cad2,
+            output_id: 9e572320-02be-4d79-bd17-f63ea2489c1f,
+            output_name: Raw data output,
+            downstream_node: 1da5a095-00af-45fe-ba1b-ea9576439f75,
+            input_id: 6e4524b6-2997-4a21-a49b-228b88ba5c5b,
+            input_name: Raw data input,
+          }, {
+            upstream_node: 1da5a095-00af-45fe-ba1b-ea9576439f75,
+            output_id: afaeb28d-d31a-4c42-a47f-41fd414f9504,
+            output_name: Processed data output,
+            downstream_node: ae3de17e-1c7a-4817-b619-b5aa984ffe51,
+            input_id: d645dd0e-8942-46dd-8d2c-01f2b7bba946,
+            input_name: Processed data input,
+          }
+        ]
+    MultiNodePipeline:
+      summary: A Pipeline with multi-node connections
+      value:
+        id: 8860b4ed-1815-4b0d-9e2e-6fc9ad62b44d
+        name: Multi-Node Pipeline
+        description: An example pipeline with multi-node connections.
+        launched: 2019-11-30T09:04:15Z
+        status: degraded
+        nodes: [
+          8d49ae44-1354-4b63-9100-cab3f5f7dd76,
+          4f587fdd-ed59-4bba-9cc6-10fbf93c362b,
+          ca014279-3e26-425c-afb8-6977b042fed9,
+          c252eb0d-e930-4192-8421-733903a49c95,
+          0614cf93-f935-43c2-ab47-4a52e692d485
+        ]
+        edges: [
+          {
+            upstream_node: 8d49ae44-1354-4b63-9100-cab3f5f7dd76,
+            output_id: f09e8c6f-3062-48b1-9e89-0d6aae314505,
+            output_name: Output data,
+            downstream_node: ca014279-3e26-425c-afb8-6977b042fed9,
+            input_id: 47d29f94-4590-4f55-9574-f721869bba32,
+            input_name: Data source 1,
+          }, {
+            upstream_node: 4f587fdd-ed59-4bba-9cc6-10fbf93c362b,
+            output_id: 8c382374-49a6-42f4-809b-30fad72f22b5,
+            output_name: Output data,
+            downstream_node: ca014279-3e26-425c-afb8-6977b042fed9,
+            input_id: 47d29f94-4590-4f55-9574-f721869bba32,
+            input_name: Data source 2,
+          }, {
+            upstream_node: ca014279-3e26-425c-afb8-6977b042fed9,
+            output_id: 6834c9eb-9b02-48d6-8c93-d9d485634b18,
+            output_name: Processed data,
+            downstream_node: c252eb0d-e930-4192-8421-733903a49c95,
+            input_id: 0e911502-b8e8-4619-85e4-2807c83842d6,
+            input_name: Processed data,
+          }, {
+            upstream_node: ca014279-3e26-425c-afb8-6977b042fed9,
+            output_id: 6834c9eb-9b02-48d6-8c93-d9d485634b18,
+            output_name: Processed data,
+            downstream_node: 0614cf93-f935-43c2-ab47-4a52e692d485,
+            input_id: 4a03041c-da56-4474-9550-42c4583b15e3,
+            input_name: Processed data,
+          },
+        ]
+
   schemas:
     Version: # The API version number
       required:
