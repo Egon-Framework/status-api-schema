@@ -10,7 +10,7 @@ info:
     The status API is a small, read-only API for monitoring Egon pipelines.
     API endpoints are broken into two categories based on general use case.
     
-    **System Status** endpoints are provided for checking API health, version, and documentation.
+    **API Status** endpoints are provided for checking API health, version, and documentation.
     These endpoints provide no information about running Egon processes and can be accessed without authentication.
     
     **Pipeline Metadata** endpoints expose information about user submitted Egon pipelines.
@@ -28,15 +28,15 @@ servers:
         default: '4010'
         description: The API port number
 tags:
-  - name: System Status
-    description: Retrieve information concerning API health and version
+  - name: API Status
+    description: Retrieve information concerning the API's health and version
   - name: Pipeline Metadata
     description: Metadata and status information for currently running pipeline components
 paths:
   /:
     get:
       tags:
-        - System Status
+        - API Status
       summary: Base API URL
       description: The base API URL points users at the API documentation.
       operationId: root
@@ -51,7 +51,7 @@ paths:
   /health:
     get:
       tags:
-        - System Status
+        - API Status
       summary: API health check
       description: Check the API health status.
       operationId: healthCheck
@@ -61,7 +61,7 @@ paths:
   /version:
     get:
       tags:
-        - System Status
+        - API Status
       summary: Get the API version
       description: Return the current API version number.
       operationId: version
