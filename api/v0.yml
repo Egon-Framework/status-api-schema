@@ -145,6 +145,11 @@ components:
   responses:
     UnauthorizedError:
       description: Authentication information is missing or invalid
+      content:
+        text/plain:
+          schema:
+            type: string
+            enum: [ Authentication failed ]
     MissingResourceError:
       description: Resource not found
   examples:
