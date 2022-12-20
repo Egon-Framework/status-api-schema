@@ -152,6 +152,11 @@ components:
             enum: [ Authentication failed ]
     MissingResourceError:
       description: Resource not found
+      content:
+        text/plain:
+          schema:
+            type: string
+            enum: [ Resource not found ]
   examples:
     Version:
       description: Version 0.1
