@@ -348,7 +348,7 @@ components:
     TokenQueryAuth:
       type: apiKey
       in: query
-      name: User Token
+      name: token
       description: |-
         API tokens are temporary and limited in scope.
         User tokens provide access to information concerning a single running pipeline.
