@@ -32,7 +32,7 @@ spectral lint api/*.yml --fail-severity warn
 A mock API instance can be spun up using [prism](https://docs.stoplight.io/docs/prism/):
 
 ```bash
-prism mock api/v0.yml -p 4010
+prism mock api/v0.1.yml -p 4010
 ```
 
 The mock server will automatically render responses using example data contained within the API specification.
@@ -50,7 +50,7 @@ curl  http://127.0.0.1:4010/pipeline/123?token=1234
 The `prism` utility can be run in `proxy` mode to validate responses from a running API server.
 
 ```bash
-prism proxy api/v0.yml http://localhost:3000 --errors
+prism proxy api/v0.1.yml http://localhost:3000 --errors
 ```
 
 ### Previewing the Documentation
@@ -59,7 +59,7 @@ A local documentation preview can be generated using the [elements](https://stop
 Use the `preview` command to launch a live preview:
 
 ```bash
-elements preview -w api/v0.yml
+elements preview -w api/v0.1.yml
 ```
 
 When specifying the `-w` argument, `elements` will watch for file changes and automatically reload the documentation.
