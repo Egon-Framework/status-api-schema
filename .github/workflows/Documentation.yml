@@ -35,9 +35,10 @@ jobs:
             (cd docs/$version/ && elements export --title="Egon Status API $version" --base-path=status-api/$version/ --no-try-it api.yml > index.html)
           done
           
-          # Set the default webpage to the latest version - rely on glob's alphanumerical sorting
-          cp $api_file docs/api.yml
-          (cd docs && elements export --title="Egon Status API $version" --base-path=status-api --no-try-it api.yml > index.html)
+          # Set the latest page to the latest version - rely on glob's alphanumerical sorting
+          mkdir docs/latest/
+          cp $api_file docs/latest/api.yml
+          (cd docs/latest && elements export --title="Egon Status API $version" --base-path=status-api/latest --no-try-it api.yml > index.html)
 
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v1
