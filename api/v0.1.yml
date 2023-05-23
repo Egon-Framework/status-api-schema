@@ -172,8 +172,36 @@ components:
   responses:
     UnauthorizedError:
       description: Authentication information is missing or invalid
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                const: 401
+              message:
+                type: string
+                const: Unauthorized
+              details:
+                type: string
+                const: Invalid access token provided. Please try again with appropriate credential.
     MissingResourceError:
       description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                const: 404
+              message:
+                type: string
+                const: Not Found
+              details:
+                type: string
+                const: A resource was not found matching the specified ID value.
   examples:
     Version:
       description: Version 0.1
