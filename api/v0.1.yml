@@ -132,6 +132,11 @@ paths:
               examples:
                 etl:
                   $ref: '#/components/examples/ETLPipeline'
+      responses:
+        '201':
+          description: Created
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
   /node/{nodeID}:
     get:
       tags:
