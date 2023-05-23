@@ -173,38 +173,38 @@ components:
     UnauthorizedError:
       description: Authentication information is missing or invalid
       content:
-        application/json:
+        application/problem+json:
           schema:
             type: object
             properties:
-              code:
+              status:
                 type: integer
                 enum:
                   - 401
-              message:
+              title:
                 type: string
                 enum:
                   - Unauthorized
-              details:
+              detail:
                 type: string
                 enum:
                   - Invalid access token provided. Please try again with appropriate credential.
     MissingResourceError:
       description: Resource not found
       content:
-        application/json:
+        application/problem+json:
           schema:
             type: object
             properties:
-              code:
+              status:
                 type: integer
                 enum:
                   - 404
-              message:
+              title:
                 type: string
                 enum:
                   - Not Found
-              details:
+              detail:
                 type: string
                 enum:
                   - A resource was not found matching the specified ID value.
