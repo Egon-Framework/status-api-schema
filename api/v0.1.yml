@@ -179,13 +179,16 @@ components:
             properties:
               code:
                 type: integer
-                const: 401
+                enum:
+                  - 401
               message:
                 type: string
-                const: Unauthorized
+                enum:
+                  - Unauthorized
               details:
                 type: string
-                const: Invalid access token provided. Please try again with appropriate credential.
+                enum:
+                  - Invalid access token provided. Please try again with appropriate credential.
     MissingResourceError:
       description: Resource not found
       content:
@@ -195,13 +198,16 @@ components:
             properties:
               code:
                 type: integer
-                const: 404
+                enum:
+                  - 404
               message:
                 type: string
-                const: Not Found
+                enum:
+                  - Not Found
               details:
                 type: string
-                const: A resource was not found matching the specified ID value.
+                enum:
+                  - A resource was not found matching the specified ID value.
   examples:
     Version:
       description: Version 0.1
