@@ -107,6 +107,33 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         '404':
           $ref: '#/components/responses/MissingResourceError'
+    post:
+      tags:
+        - Pipeline Metadata
+      security:
+        - TokenQueryAuth: [ ]
+      summary: Store new pipeline metadata
+      description: Store information for a new pipeline with the provided metadata.
+      operationId: createPipeline
+      parameters:
+        - name: pipelineId
+          in: path
+          description: Pipeline ID to store data for
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Pipeline metadata
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pipeline'
+      responses:
+        '201':
+          description: Created
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
   /node/{nodeID}:
     get:
       tags:
