@@ -100,6 +100,8 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         '404':
           $ref: '#/components/responses/MissingResourceError'
+        '409':
+          $ref: '#/components/responses/ResourceExistsError'
     post:
       tags:
         - Pipeline Metadata
@@ -160,6 +162,8 @@ components:
       description: Authentication information is missing or invalid
     MissingResourceError:
       description: Resource not found
+    ResourceExistsError:
+      description: One or more resources already exists with the given ID(s)
   examples:
     Version:
       description: Version 0.1
