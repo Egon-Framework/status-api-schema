@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Egon Status API
-  version: 0.1.0
+  version: "0.1"
   contact:
     url: https://github.com/Egon-Framework/status-api
   description: |-
     ## API Overview
     
-    The status API is a small, read-only API for monitoring Egon pipelines.
+    The status API is used for monitoring the status of Egon nodes and pipelines.
     API endpoints are broken into two categories based on general use case.
     
     **API Status** endpoints are provided for checking API health, version, and documentation.
@@ -75,22 +75,15 @@ paths:
               examples:
                 version 0.1:
                   $ref: '#/components/examples/Version'
-  /pipeline/{pipelineId}:
+  /pipeline:
     get:
       tags:
         - Pipeline Metadata
       security:
         - TokenQueryAuth: [ ]
       summary: Get pipeline metadata
-      description: Get metadata for a currently running pipeline by its ID.
+      description: Get metadata for a pipeline by its ID.
       operationId: getPipelineById
-      parameters:
-        - name: pipelineId
-          in: path
-          description: Pipeline ID to return data for
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: OK
@@ -107,21 +100,16 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         '404':
           $ref: '#/components/responses/MissingResourceError'
+        '409':
+          $ref: '#/components/responses/ResourceExistsError'
     post:
       tags:
         - Pipeline Metadata
       security:
         - TokenQueryAuth: [ ]
       summary: Store new pipeline metadata
-      description: Store information for a new pipeline with the provided metadata.
-      operationId: createPipeline
-      parameters:
-        - name: pipelineId
-          in: path
-          description: Pipeline ID to store data for
-          required: true
-          schema:
-            type: string
+      description: Store metadata information for a new pipeline.
+      operationId: postPipelineById
       requestBody:
         description: Pipeline metadata
         required: true
@@ -134,7 +122,7 @@ paths:
           description: Created
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-  /node/{nodeID}:
+  /node:
     get:
       tags:
         - Pipeline Metadata
@@ -143,13 +131,6 @@ paths:
       summary: Get node metadata
       description: Get metadata for a single pipeline node by its ID.
       operationId: getNodeById
-      parameters:
-        - name: nodeID
-          in: path
-          description: Node ID to return data for
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: OK
@@ -190,7 +171,7 @@ components:
                 enum:
                   - Invalid access token provided. Please try again with appropriate credential.
     MissingResourceError:
-      description: Resource not found
+      description: Resource UUID not found
       content:
         application/problem+json:
           schema:
@@ -208,6 +189,25 @@ components:
                 type: string
                 enum:
                   - A resource was not found matching the specified ID value.
+    ResourceExistsError:
+      description: Resource UUID already exists
+      content:
+        application/problem+json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                enum:
+                  - 409
+              title:
+                type: string
+                enum:
+                  - Conflict
+              detail:
+                type: string
+                enum:
+                  - One or more resources already exists with the given ID(s).
   examples:
     Version:
       description: Version 0.1
@@ -342,6 +342,9 @@ components:
         status:
           type: string
           enum: [ 'launching', 'running', 'stopped', 'degraded', 'errored', 'unknown' ]
+        message:
+          type: string
+          maxLength: 250
       example:
         $ref: '#/components/examples/ExtractNode/value'
     Connection: # Relationship between two individual nodes
