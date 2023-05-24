@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Egon Status API
-  version: 0.1
+  version: "0.1"
   contact:
     url: https://github.com/Egon-Framework/status-api
   description: |-
@@ -110,13 +110,6 @@ paths:
       summary: Store new pipeline metadata
       description: Store metadata information for a new pipeline.
       operationId: postPipelineById
-      parameters:
-        - name: pipelineId
-          in: path
-          description: Pipeline ID to store data for
-          required: true
-          schema:
-            type: string
       requestBody:
         description: Pipeline metadata
         required: true
@@ -129,7 +122,7 @@ paths:
           description: Created
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-  /node/:
+  /node:
     get:
       tags:
         - Pipeline Metadata
