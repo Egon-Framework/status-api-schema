@@ -294,6 +294,9 @@ components:
         status:
           type: string
           enum: [ 'launching', 'running', 'stopped', 'degraded', 'errored', 'unknown' ]
+        message:
+          type: string
+          maxLength: 250
       example:
         $ref: '#/components/examples/ExtractNode/value'
     Connection: # Relationship between two individual nodes
