@@ -171,7 +171,7 @@ components:
                 enum:
                   - Invalid access token provided. Please try again with appropriate credential.
     MissingResourceError:
-      description: Resource not found
+      description: Resource UUID not found
       content:
         application/problem+json:
           schema:
@@ -191,23 +191,23 @@ components:
                   - A resource was not found matching the specified ID value.
     ResourceExistsError:
       description: Resource UUID already exists
-        content:
-          application/problem+json:
-            schema:
-              type: object
-              properties:
-                status:
-                  type: integer
-                  enum:
-                    - 409
-                title:
-                  type: string
-                  enum:
-                    - Conflict
-                detail:
-                  type: string
-                  enum:
-                    - One or more resources already exists with the given ID(s).
+      content:
+        application/problem+json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: integer
+                enum:
+                  - 409
+              title:
+                type: string
+                enum:
+                  - Conflict
+              detail:
+                type: string
+                enum:
+                  - One or more resources already exists with the given ID(s).
   examples:
     Version:
       description: Version 0.1
