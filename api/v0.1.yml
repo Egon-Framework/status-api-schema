@@ -75,7 +75,7 @@ paths:
               examples:
                 version 0.1:
                   $ref: '#/components/examples/Version'
-  /pipeline/{pipelineId}:
+  /pipeline:
     get:
       tags:
         - Pipeline Metadata
@@ -84,13 +84,6 @@ paths:
       summary: Get pipeline metadata
       description: Get metadata for a pipeline by its ID.
       operationId: getPipelineById
-      parameters:
-        - name: pipelineId
-          in: path
-          description: Pipeline ID to return data for
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: OK
@@ -134,7 +127,7 @@ paths:
           description: Created
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-  /node/{nodeID}:
+  /node/:
     get:
       tags:
         - Pipeline Metadata
@@ -143,13 +136,6 @@ paths:
       summary: Get node metadata
       description: Get metadata for a single pipeline node by its ID.
       operationId: getNodeById
-      parameters:
-        - name: nodeID
-          in: path
-          description: Node ID to return data for
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: OK
