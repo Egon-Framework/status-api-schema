@@ -14,7 +14,7 @@ This project relies on the open source API development stack built by [stoplight
 The necessary developer tools can be installed with `npm`:
 
 ```bash
-npm install -g @stoplight/prism-cli @stoplight/spectral @skriptfabrik/elements-cli
+npm install -g @stoplight/prism-cli @stoplight/spectral
 ```
 
 ### Linting Standards
@@ -51,15 +51,3 @@ The `prism` utility can be run in `proxy` mode to validate responses from a runn
 ```bash
 prism proxy api/v0.1.yml http://localhost:3000 --errors
 ```
-
-### Previewing the Documentation
-
-A local documentation preview can be generated using the [elements](https://stoplight.io/open-source/elements) utility.
-Use the `preview` command to launch a live preview:
-
-```bash
-elements preview -w api/v0.1.yml
-```
-
-When specifying the `-w` argument, `elements` will watch for file changes and automatically reload the documentation.
-By default, the documentation will be accessible on [http://localhost:8000/](http://localhost:8000/).
