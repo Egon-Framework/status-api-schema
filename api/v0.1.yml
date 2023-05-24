@@ -1,13 +1,13 @@
 openapi: 3.0.3
 info:
   title: Egon Status API
-  version: 0.1.0
+  version: 0.1
   contact:
     url: https://github.com/Egon-Framework/status-api
   description: |-
     ## API Overview
     
-    The status API is a small, read-only API for monitoring Egon pipelines.
+    The status API is used for monitoring the status of Egon nodes and pipelines.
     API endpoints are broken into two categories based on general use case.
     
     **API Status** endpoints are provided for checking API health, version, and documentation.
@@ -82,7 +82,7 @@ paths:
       security:
         - TokenQueryAuth: [ ]
       summary: Get pipeline metadata
-      description: Get metadata for a currently running pipeline by its ID.
+      description: Get metadata for a pipeline by its ID.
       operationId: getPipelineById
       parameters:
         - name: pipelineId
@@ -113,8 +113,8 @@ paths:
       security:
         - TokenQueryAuth: [ ]
       summary: Store new pipeline metadata
-      description: Store information for a new pipeline with the provided metadata.
-      operationId: createPipeline
+      description: Store metadata information for a new pipeline.
+      operationId: postPipelineById
       parameters:
         - name: pipelineId
           in: path
