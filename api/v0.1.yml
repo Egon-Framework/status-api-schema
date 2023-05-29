@@ -122,10 +122,8 @@ paths:
                 multi-node:
                   $ref: '#/components/examples/MultiNodePipeline'
         '401':
-          description: Missing or incomplete authorization.
           $ref: '#/components/responses/UnauthorizedError'
         '404':
-          description: No resources found under the given ID within the scope authorized user session.
           $ref: '#/components/responses/MissingResourceError'
     post:
       tags:
@@ -146,10 +144,8 @@ paths:
         '200':
           description: OK
         '401':
-          description: Missing or incomplete authorization.
           $ref: '#/components/responses/UnauthorizedError'
         '409':
-          description: A pipeline with the given UUID already exists.
           $ref: '#/components/responses/ResourceExistsError'
     delete:
       tags:
@@ -163,10 +159,8 @@ paths:
         '201':
           description: Created
         '401':
-          description: Missing or incomplete authorization.
           $ref: '#/components/responses/UnauthorizedError'
         '404':
-          description: No resources found under the given ID within the scope authorized user session.
           $ref: '#/components/responses/MissingResourceError'
   /node:
     get:
