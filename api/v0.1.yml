@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Egon Status API
-  version: "1"
+  version: "1.0"
   contact:
     url: https://github.com/Egon-Framework/status-api
   description: |-
@@ -34,7 +34,7 @@ paths:
       tags:
         - API Status
       summary: Base API URL
-      description: The base API URL points users at the API documentation.
+      description: The base API URL.
       operationId: root
       responses:
         '200':
@@ -43,7 +43,7 @@ paths:
             text/plain:
               schema:
                 type: string
-                example: 'The Egon Framework status API. See https://egon-framework.github.io/status-api/ for more details.'
+                example: 'The Egon Framework status API.'
   /health:
     get:
       tags:
@@ -67,10 +67,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Version'
+                required:
+                  - version
+                properties:
+                  version:
+                    type: string
+                    pattern: ^\d*\.\d*$ # Major and minor version only
               examples:
-                version 0.1:
-                  $ref: '#/components/examples/Version'
+                version 1:
+                  description: API version 1
+                  value:
+                    version: "1.0"
   /pipeline:
     get:
       tags:
@@ -79,7 +86,7 @@ paths:
         - TokenQueryAuth: [ ]
       summary: Get pipeline metadata
       description: Get metadata for a pipeline by its ID.
-      operationId: getPipelineById
+      operationId: getPipeline
       responses:
         '200':
           description: OK
@@ -126,7 +133,7 @@ paths:
         - TokenQueryAuth: [ ]
       summary: Get node metadata
       description: Get metadata for a single pipeline node by its ID.
-      operationId: getNodeById
+      operationId: getNode
       responses:
         '200':
           description: OK
@@ -205,10 +212,6 @@ components:
                 enum:
                   - One or more resources already exists with the given ID(s).
   examples:
-    Version:
-      description: Version 0.1
-      value:
-        version: "0.1"
     ExtractNode:
       summary: Extract node for an ETL pipeline
       value:
@@ -309,15 +312,6 @@ components:
           },
         ]
   schemas:
-    Version: # The API version number
-      required:
-        - version
-      properties:
-        version:
-          type: string
-          pattern: ^\d*\.\d*$ # Major and minor version only
-      example:
-        $ref: '#/components/examples/Version/value'
     Node: # Meta data for a given node
       required:
         - id
