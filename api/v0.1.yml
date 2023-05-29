@@ -31,11 +31,11 @@ tags:
 paths:
   /:
     get:
-      tags:
-        - API Status
+      operationId: root
       summary: Base API URL
       description: The base API URL.
-      operationId: root
+      tags:
+        - API Status
       responses:
         '200':
           description: OK
@@ -46,21 +46,21 @@ paths:
                 example: 'The Egon Framework status API.'
   /health:
     get:
-      tags:
-        - API Status
+      operationId: healthCheck
       summary: API health check
       description: Check the API health status.
-      operationId: healthCheck
+      tags:
+        - API Status
       responses:
         '200':
           description: OK
   /version:
     get:
-      tags:
-        - API Status
+      operationId: version
       summary: Get the API version
       description: Return the current API version number.
-      operationId: version
+      tags:
+        - API Status
       responses:
         '200':
           description: OK
@@ -80,11 +80,11 @@ paths:
                     version: "1.0"
   /auth:
     get:
-      tags:
-        - API Status
+      operationId: authenticate
       summary: Authenticate a new API session
       description: Return authentication keys for a new API session.
-      operationId: authenticate
+      tags:
+        - API Status
       responses:
         '200':
           description: OK
@@ -99,16 +99,23 @@ paths:
                     type: string
                   write:
                     type: string
-  /pipeline:
+  /pipeline/{pipelineId}:
     get:
+      operationId: getPipeline
+      summary: Get structural information for an existing pipeline
+      description: Returns ID values for each node/connection in a pipeline.
       tags:
         - Pipeline Metadata
       security:
         - ReadToken: [ ]
         - WriteToken: [ ]
-      summary: Get structural information for an existing pipeline
-      description: Returns ID values for each node/connection in a pipeline.
-      operationId: getPipeline
+      parameters:
+        - name: pipelineId
+          in: path
+          description: Pipeline ID to return data for
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -126,13 +133,20 @@ paths:
         '404':
           $ref: '#/components/responses/MissingResourceError'
     post:
+      operationId: postPipeline
+      summary: Store structural information for a new pipeline
+      description: Store structural information for a new pipeline.
       tags:
         - Pipeline Metadata
       security:
         - WriteToken: [ ]
-      summary: Store structural information for a new pipeline
-      description: Store structural information for a new pipeline.
-      operationId: postPipeline
+      parameters:
+        - name: pipelineId
+          in: path
+          description: Pipeline ID to return data for
+          required: true
+          schema:
+            type: string
       requestBody:
         description: Pipeline metadata
         required: true
@@ -148,13 +162,20 @@ paths:
         '409':
           $ref: '#/components/responses/ResourceExistsError'
     delete:
+      operationId: deletePipeline
+      summary: Delete records for an existing pipeline
+      description: Delete records for an existing pipeline.
       tags:
         - Pipeline Metadata
       security:
         - WriteToken: [ ]
-      summary: Delete records for an existing pipeline
-      description: Delete records for an existing pipeline.
-      operationId: deletePipeline
+      parameters:
+        - name: pipelineId
+          in: path
+          description: Pipeline ID to return data for
+          required: true
+          schema:
+            type: string
       responses:
         '201':
           description: Created
