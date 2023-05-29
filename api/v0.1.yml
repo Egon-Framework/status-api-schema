@@ -183,16 +183,23 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         '404':
           $ref: '#/components/responses/MissingResourceError'
-  /node:
+  /node/{nodeID}:
     get:
+      operationId: getNode
+      summary: Get node metadata
+      description: Get metadata for a single pipeline node by its ID.
       tags:
         - Pipeline Metadata
       security:
         - ReadToken: [ ]
         - WriteToken: [ ]
-      summary: Get node metadata
-      description: Get metadata for a single pipeline node by its ID.
-      operationId: getNode
+      parameters:
+        - name: nodeID
+          in: path
+          description: Node ID to return data for
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: OK
