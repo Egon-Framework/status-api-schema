@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Egon Status API
-  version: "1"
+  version: "1.0"
   contact:
     url: https://github.com/Egon-Framework/status-api
   description: |-
@@ -31,11 +31,11 @@ tags:
 paths:
   /:
     get:
+      operationId: root
+      summary: Base API URL
+      description: The base API URL.
       tags:
         - API Status
-      summary: Base API URL
-      description: The base API URL points users at the API documentation.
-      operationId: root
       responses:
         '200':
           description: OK
@@ -43,43 +43,79 @@ paths:
             text/plain:
               schema:
                 type: string
-                example: 'The Egon Framework status API. See https://egon-framework.github.io/status-api/ for more details.'
+                example: 'The Egon Framework status API.'
   /health:
     get:
-      tags:
-        - API Status
+      operationId: healthCheck
       summary: API health check
       description: Check the API health status.
-      operationId: healthCheck
+      tags:
+        - API Status
       responses:
         '200':
           description: OK
   /version:
     get:
-      tags:
-        - API Status
+      operationId: version
       summary: Get the API version
       description: Return the current API version number.
-      operationId: version
+      tags:
+        - API Status
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Version'
+                required:
+                  - version
+                properties:
+                  version:
+                    type: string
+                    pattern: ^\d*\.\d*$ # Major and minor version only
               examples:
-                version 0.1:
-                  $ref: '#/components/examples/Version'
-  /pipeline:
+                version 1:
+                  description: API version 1
+                  value:
+                    version: "1.0"
+  /auth:
     get:
+      operationId: authenticate
+      summary: Authenticate a new API session
+      description: Return authentication keys for a new API session.
+      tags:
+        - API Status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - read
+                  - write
+                properties:
+                  read:
+                    type: string
+                  write:
+                    type: string
+  /pipeline/{pipelineId}:
+    get:
+      operationId: getPipeline
+      summary: Get structural information for an existing pipeline
+      description: Returns ID values for each node/connection in a pipeline.
       tags:
         - Pipeline Metadata
       security:
-        - TokenQueryAuth: [ ]
-      summary: Get pipeline metadata
-      description: Get metadata for a pipeline by its ID.
-      operationId: getPipelineById
+        - ReadToken: [ ]
+        - WriteToken: [ ]
+      parameters:
+        - name: pipelineId
+          in: path
+          description: Pipeline ID to return data for
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -97,13 +133,20 @@ paths:
         '404':
           $ref: '#/components/responses/MissingResourceError'
     post:
+      operationId: postPipeline
+      summary: Store structural information for a new pipeline
+      description: Store structural information for a new pipeline.
       tags:
         - Pipeline Metadata
       security:
-        - TokenQueryAuth: [ ]
-      summary: Store new pipeline metadata
-      description: Store metadata information for a new pipeline.
-      operationId: postPipelineById
+        - WriteToken: [ ]
+      parameters:
+        - name: pipelineId
+          in: path
+          description: Pipeline ID to return data for
+          required: true
+          schema:
+            type: string
       requestBody:
         description: Pipeline metadata
         required: true
@@ -112,21 +155,51 @@ paths:
             schema:
               $ref: '#/components/schemas/Pipeline'
       responses:
-        '201':
-          description: Created
+        '200':
+          description: OK
         '401':
           $ref: '#/components/responses/UnauthorizedError'
         '409':
           $ref: '#/components/responses/ResourceExistsError'
-  /node:
-    get:
+    delete:
+      operationId: deletePipeline
+      summary: Delete records for an existing pipeline
+      description: Delete records for an existing pipeline.
       tags:
         - Pipeline Metadata
       security:
-        - TokenQueryAuth: [ ]
+        - WriteToken: [ ]
+      parameters:
+        - name: pipelineId
+          in: path
+          description: Pipeline ID to return data for
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Created
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/MissingResourceError'
+  /node/{nodeID}:
+    get:
+      operationId: getNode
       summary: Get node metadata
       description: Get metadata for a single pipeline node by its ID.
-      operationId: getNodeById
+      tags:
+        - Pipeline Metadata
+      security:
+        - ReadToken: [ ]
+        - WriteToken: [ ]
+      parameters:
+        - name: nodeID
+          in: path
+          description: Node ID to return data for
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: OK
@@ -141,6 +214,28 @@ paths:
                   $ref: '#/components/examples/TransformNode'
                 load:
                   $ref: '#/components/examples/LoadNode'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/MissingResourceError'
+    put:
+      operationId: putNode
+      summary: Update node metadata
+      description: Update metadata for a single pipeline node by its ID.
+      tags:
+        - Pipeline Metadata
+      security:
+        - WriteToken: [ ]
+      parameters:
+        - name: nodeID
+          in: path
+          description: Node ID to return data for
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
         '401':
           $ref: '#/components/responses/UnauthorizedError'
         '404':
@@ -205,10 +300,6 @@ components:
                 enum:
                   - One or more resources already exists with the given ID(s).
   examples:
-    Version:
-      description: Version 0.1
-      value:
-        version: "0.1"
     ExtractNode:
       summary: Extract node for an ETL pipeline
       value:
@@ -309,15 +400,6 @@ components:
           },
         ]
   schemas:
-    Version: # The API version number
-      required:
-        - version
-      properties:
-        version:
-          type: string
-          pattern: ^\d*\.\d*$ # Major and minor version only
-      example:
-        $ref: '#/components/examples/Version/value'
     Node: # Meta data for a given node
       required:
         - id
@@ -405,11 +487,15 @@ components:
       example:
         $ref: '#/components/examples/ETLPipeline/value'
   securitySchemes:
-    TokenQueryAuth:
+    ReadToken:
       type: apiKey
       in: query
-      name: token
+      name: readToken
       description: |-
-        API tokens are temporary and limited in scope.
-        User tokens provide access to information concerning a single running pipeline.
-        Once the associated pipeline is no longer running, the credentials expire.
+        Read only API token limited in scope to data created by the parent user session.
+    WriteToken:
+      type: apiKey
+      in: query
+      name: writeToken
+      description: |-
+        API token with read/write permissions limited in scope to data created by the parent user session.
