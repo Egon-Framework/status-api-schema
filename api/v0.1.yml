@@ -1,24 +1,20 @@
 openapi: 3.0.3
 info:
   title: Egon Status API
-  version: "0.1"
+  version: "1"
   contact:
     url: https://github.com/Egon-Framework/status-api
   description: |-
-    ## API Overview
-    
-    The status API is used for monitoring the status of Egon nodes and pipelines.
+    The status API is used to track the status of Egon objects in production.
     API endpoints are broken into two categories based on general use case.
     
-    **API Status** endpoints are provided for checking API health, version, and documentation.
+    **API Status** endpoints are provided for checking the API health and version.
     These endpoints provide no information about running Egon processes and can be accessed without authentication.
     
     **Pipeline Metadata** endpoints expose information about user submitted Egon pipelines.
-    These endpoints are authenticated via API tokens.
-    Each token is tied to an individual pipeline and provides access to information about a single running pipeline.
-    Tokens are valid for the life-time of the associated pipeline and expire once the pipeline is no longer running.
+    These endpoints are authenticated via API tokens and with each token providing access only to information it has created.
 servers:
-  - url: https://{url}:{port}/V0
+  - url: https://{url}:{port}/V1
     description: Local development server
     variables:
       url:
@@ -100,8 +96,6 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         '404':
           $ref: '#/components/responses/MissingResourceError'
-        '409':
-          $ref: '#/components/responses/ResourceExistsError'
     post:
       tags:
         - Pipeline Metadata
@@ -122,6 +116,8 @@ paths:
           description: Created
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+        '409':
+          $ref: '#/components/responses/ResourceExistsError'
   /node:
     get:
       tags:
