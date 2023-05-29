@@ -80,11 +80,13 @@ paths:
                     version: "1.0"
   /auth:
     get:
+      tags:
+        - API Status
       summary: Authenticate a new API session
       description: Return authentication keys for a new API session.
-      operationID: authenticate
+      operationId: authenticate
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
