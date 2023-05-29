@@ -218,6 +218,28 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         '404':
           $ref: '#/components/responses/MissingResourceError'
+    put:
+      operationId: putNode
+      summary: Update node metadata
+      description: Update metadata for a single pipeline node by its ID.
+      tags:
+        - Pipeline Metadata
+      security:
+        - WriteToken: [ ]
+      parameters:
+        - name: nodeID
+          in: path
+          description: Node ID to return data for
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/MissingResourceError'
 components:
   responses:
     UnauthorizedError:
