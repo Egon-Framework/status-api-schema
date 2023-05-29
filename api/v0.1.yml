@@ -94,11 +94,11 @@ paths:
                 required:
                   - read
                   - write
-              properties:
-                read:
-                  type: string
-                write:
-                  type: string
+                properties:
+                  read:
+                    type: string
+                  write:
+                    type: string
   /pipeline:
     get:
       tags:
