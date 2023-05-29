@@ -78,6 +78,25 @@ paths:
                   description: API version 1
                   value:
                     version: "1.0"
+  /auth:
+    get:
+      summary: Authenticate a new API session
+      description: Return authentication keys for a new API session.
+      operationID: authenticate
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                required:
+                  - read
+                  - write
+              properties:
+                read:
+                  type: string
+                write:
+                  type: string
   /pipeline:
     get:
       tags:
