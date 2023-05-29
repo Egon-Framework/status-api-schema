@@ -102,7 +102,8 @@ paths:
       tags:
         - Pipeline Metadata
       security:
-        - TokenQueryAuth: [ ]
+        - ReadToken: [ ]
+        - WriteToken: [ ]
       summary: Get pipeline metadata
       description: Get metadata for a pipeline by its ID.
       operationId: getPipeline
@@ -126,7 +127,7 @@ paths:
       tags:
         - Pipeline Metadata
       security:
-        - TokenQueryAuth: [ ]
+        - WriteToken: [ ]
       summary: Store new pipeline metadata
       description: Store metadata information for a new pipeline.
       operationId: postPipelineById
@@ -149,7 +150,8 @@ paths:
       tags:
         - Pipeline Metadata
       security:
-        - TokenQueryAuth: [ ]
+        - ReadToken: [ ]
+        - WriteToken: [ ]
       summary: Get node metadata
       description: Get metadata for a single pipeline node by its ID.
       operationId: getNode
@@ -418,11 +420,15 @@ components:
       example:
         $ref: '#/components/examples/ETLPipeline/value'
   securitySchemes:
-    TokenQueryAuth:
+    ReadToken:
       type: apiKey
       in: query
-      name: token
+      name: readToken
       description: |-
-        API tokens are temporary and limited in scope.
-        User tokens provide access to information concerning a single running pipeline.
-        Once the associated pipeline is no longer running, the credentials expire.
+        Read only API token limited in scope to data created by the parent user session.
+    WriteToken:
+      type: apiKey
+      in: query
+      name: writeToken
+      description: |-
+        API token with read/write permissions limited in scope to data created by the parent user session.
