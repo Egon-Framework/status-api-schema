@@ -7,12 +7,6 @@ info:
   description: |-
     The status API is used to track the status of Egon objects in production.
     API endpoints are broken into two categories based on general use case.
-    
-    **API Status** endpoints are provided for checking the API health and version.
-    These endpoints provide no information about running Egon processes and can be accessed without authentication.
-    
-    **Pipeline Metadata** endpoints expose information about user submitted Egon pipelines.
-    These endpoints are authenticated via API tokens and with each token providing access only to information it has created.
 servers:
   - url: https://{url}:{port}/V1
     description: Local development server
@@ -25,9 +19,11 @@ servers:
         description: The API port number
 tags:
   - name: API Status
-    description: Retrieve information concerning the API's health and version
-  - name: Pipeline Metadata
-    description: Metadata and status information for currently running pipeline components
+    description: Retrieve information concerning the API's health and version.
+  - name: Pipeline Status
+    description: Metadata and status information for Egon Pipelines.
+  - name: Node Status
+    description: Metadata and status information for individual pipeline components.
 paths:
   /:
     get:
@@ -58,7 +54,7 @@ paths:
     get:
       operationId: version
       summary: Get the API version
-      description: Return the current API version number.
+      description: Return the major and minor API version number.
       tags:
         - API Status
       responses:
@@ -105,7 +101,7 @@ paths:
       summary: Get structural information for an existing pipeline
       description: Returns ID values for each node/connection in a pipeline.
       tags:
-        - Pipeline Metadata
+        - Pipeline Status
       security:
         - ReadToken: [ ]
         - WriteToken: [ ]
@@ -137,7 +133,7 @@ paths:
       summary: Store structural information for a new pipeline
       description: Store structural information for a new pipeline.
       tags:
-        - Pipeline Metadata
+        - Pipeline Status
       security:
         - WriteToken: [ ]
       parameters:
@@ -148,7 +144,7 @@ paths:
           schema:
             type: string
       requestBody:
-        description: Pipeline metadata
+        description: Pipeline Status
         required: true
         content:
           application/json:
@@ -166,7 +162,7 @@ paths:
       summary: Delete records for an existing pipeline
       description: Delete records for an existing pipeline.
       tags:
-        - Pipeline Metadata
+        - Pipeline Status
       security:
         - WriteToken: [ ]
       parameters:
@@ -189,7 +185,7 @@ paths:
       summary: Get node metadata
       description: Get metadata for a single pipeline node by its ID.
       tags:
-        - Pipeline Metadata
+        - Node Status
       security:
         - ReadToken: [ ]
         - WriteToken: [ ]
@@ -223,7 +219,7 @@ paths:
       summary: Update node metadata
       description: Update metadata for a single pipeline node by its ID.
       tags:
-        - Pipeline Metadata
+        - Node Status
       security:
         - WriteToken: [ ]
       parameters:
