@@ -1,4 +1,1 @@
 site_name: status-api-schema
-theme: material
-nav:
-  - Overview: index.md
