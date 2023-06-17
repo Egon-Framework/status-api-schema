@@ -75,12 +75,30 @@ paths:
                   value:
                     version: "1.0"
   /auth:
-    get:
+    post:
       operationId: authenticate
       summary: Authenticate a new API session
       description: Obtain an OAuth2 authentication token for a new API session.
       tags:
         - API Status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                scope:
+                  type: string
+                  enum:
+                    - read
+                    - write
+                client_id:
+                  type: string
+                  example: host.domain.com
+                client_secret:
+                  type: string
+                  example: $mD3jS3Mufz@7#lm&FX9KlYy
       responses:
         '200':
           description: OK
@@ -88,18 +106,21 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - access_token
+                  - expires_in
+                  - scope
                 properties:
-                  grant_type:
+                  access_token:
                     type: string
-                    enum:
-                      - read
-                      - write
-                  client_id:
+                  expires_in:
+                    type: integer
+                  scope:
                     type: string
-                    example: host.domain.com
-                  client_secret:
-                    type: string
-                    example: $mD3jS3Mufz@7#lm&FX9KlYy
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/MissingResourceError'
   /pipeline/{pipelineId}:
     get:
       operationId: getPipeline
@@ -258,8 +279,6 @@ components:
                   - Unauthorized
               detail:
                 type: string
-                enum:
-                  - Invalid access token provided. Please try again with appropriate credential.
     MissingResourceError:
       description: Resource UUID not found
       content:
@@ -277,8 +296,6 @@ components:
                   - Not Found
               detail:
                 type: string
-                enum:
-                  - A resource was not found matching the specified ID value.
     ResourceExistsError:
       description: Resource UUID already exists
       content:
@@ -296,8 +313,6 @@ components:
                   - Conflict
               detail:
                 type: string
-                enum:
-                  - One or more resources already exists with the given ID(s).
   examples:
     ExtractNode:
       summary: Extract node for an ETL pipeline
@@ -400,12 +415,12 @@ components:
         ]
   schemas:
     Node: # Meta data for a given node
+      type: object
       required:
         - id
         - name
         - instances
         - status
-      type: object
       properties:
         id:
           type: string
@@ -425,6 +440,7 @@ components:
       example:
         $ref: '#/components/examples/ExtractNode/value'
     Connection: # Relationship between two individual nodes
+      type: object
       required:
         - upstream_node
         - output_id
@@ -432,7 +448,6 @@ components:
         - downstream_node
         - input_id
         - input_name
-      type: object
       properties:
         upstream_node:
           type: string
@@ -451,6 +466,7 @@ components:
         input_name:
           type: string
     Pipeline: # Meta data for a given pipeline
+      type: object
       required:
         - id
         - name
@@ -458,7 +474,6 @@ components:
         - launched
         - status
         - nodes
-      type: object
       properties:
         id:
           type: string
@@ -490,7 +505,7 @@ components:
       type: oauth2
       flows:
         clientCredentials:
-          tokenURL: '/auth'
+          tokenUrl: '/auth'
           scopes:
             read-pipeline: Read only permissions for resources tied to a single pipeline
             write-pipeline: Full CRUD permissions for resources tied to a single pipeline
