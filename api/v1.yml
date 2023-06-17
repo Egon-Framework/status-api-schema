@@ -82,7 +82,7 @@ paths:
     get:
       operationId: authenticate
       summary: Authenticate a new API session
-      description: Return authentication keys for a new API session.
+      description: Obtain an OAuth2 authentication token for a new API session.
       tags:
         - API Status
       responses:
@@ -91,14 +91,19 @@ paths:
           content:
             application/json:
               schema:
-                required:
-                  - read
-                  - write
+                type: object
                 properties:
-                  read:
+                  grant_type:
                     type: string
-                  write:
+                    enum:
+                      - read
+                      - write
+                  client_id:
                     type: string
+                    example: host.domain.com
+                  client_secret:
+                    type: string
+                    example: $mD3jS3Mufz@7#lm&FX9KlYy
   /pipeline/{pipelineId}:
     get:
       operationId: getPipeline
@@ -107,8 +112,7 @@ paths:
       tags:
         - Pipeline Metadata
       security:
-        - ReadToken: [ ]
-        - WriteToken: [ ]
+        - OAuth2ClientCredentials: [ 'read-pipeline', 'write-pipeline' ]
       parameters:
         - name: pipelineId
           in: path
@@ -139,7 +143,7 @@ paths:
       tags:
         - Pipeline Metadata
       security:
-        - WriteToken: [ ]
+        - OAuth2ClientCredentials: [ 'write-pipeline' ]
       parameters:
         - name: pipelineId
           in: path
@@ -168,7 +172,7 @@ paths:
       tags:
         - Pipeline Metadata
       security:
-        - WriteToken: [ ]
+        - OAuth2ClientCredentials: [ 'write-pipeline' ]
       parameters:
         - name: pipelineId
           in: path
@@ -191,8 +195,7 @@ paths:
       tags:
         - Pipeline Metadata
       security:
-        - ReadToken: [ ]
-        - WriteToken: [ ]
+        - OAuth2ClientCredentials: [ 'read-pipeline', 'write-pipeline' ]
       parameters:
         - name: nodeID
           in: path
@@ -225,7 +228,7 @@ paths:
       tags:
         - Pipeline Metadata
       security:
-        - WriteToken: [ ]
+        - OAuth2ClientCredentials: [ 'write-pipeline' ]
       parameters:
         - name: nodeID
           in: path
@@ -487,15 +490,11 @@ components:
       example:
         $ref: '#/components/examples/ETLPipeline/value'
   securitySchemes:
-    ReadToken:
-      type: apiKey
-      in: query
-      name: readToken
-      description: |-
-        Read only API token limited in scope to data created by the parent user session.
-    WriteToken:
-      type: apiKey
-      in: query
-      name: writeToken
-      description: |-
-        API token with read/write permissions limited in scope to data created by the parent user session.
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenURL: '/auth'
+          scopes:
+            read-pipeline: Read only permissions for resources tied to a single pipeline
+            write-pipeline: Full CRUD permissions for resources tied to a single pipeline
