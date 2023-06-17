@@ -27,7 +27,7 @@ tags:
 paths:
   /:
     get:
-      operationId: root
+      operationId: getRoot
       summary: Base API URL
       description: The base API URL.
       tags:
@@ -42,7 +42,7 @@ paths:
                 example: 'The Egon Framework status API.'
   /health:
     get:
-      operationId: healthCheck
+      operationId: getHealth
       summary: API health check
       description: Check the API health status.
       tags:
@@ -52,7 +52,7 @@ paths:
           description: OK
   /version:
     get:
-      operationId: version
+      operationId: getVersion
       summary: Get the API version
       description: Return the major and minor API version number.
       tags:
@@ -63,6 +63,7 @@ paths:
           content:
             application/json:
               schema:
+                type: object
                 required:
                   - version
                 properties:
@@ -75,26 +76,52 @@ paths:
                   value:
                     version: "1.0"
   /auth:
-    get:
-      operationId: authenticate
+    post:
+      operationId: postAuth
       summary: Authenticate a new API session
-      description: Return authentication keys for a new API session.
+      description: Obtain an OAuth2 authentication token for a new API session.
       tags:
         - API Status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                scope:
+                  type: string
+                  enum:
+                    - read
+                    - write
+                client_id:
+                  type: string
+                  example: host.domain.com
+                client_secret:
+                  type: string
+                  example: $mD3jS3Mufz@7#lm&FX9KlYy
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
+                type: object
                 required:
-                  - read
-                  - write
+                  - access_token
+                  - expires_in
+                  - scope
                 properties:
-                  read:
+                  access_token:
                     type: string
-                  write:
+                  expires_in:
+                    type: integer
+                  scope:
                     type: string
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/MissingResourceError'
   /pipeline/{pipelineId}:
     get:
       operationId: getPipeline
@@ -103,8 +130,7 @@ paths:
       tags:
         - Pipeline Status
       security:
-        - ReadToken: [ ]
-        - WriteToken: [ ]
+        - OAuth2ClientCredentials: [ 'read-pipeline', 'write-pipeline' ]
       parameters:
         - name: pipelineId
           in: path
@@ -135,7 +161,7 @@ paths:
       tags:
         - Pipeline Status
       security:
-        - WriteToken: [ ]
+        - OAuth2ClientCredentials: [ 'write-pipeline' ]
       parameters:
         - name: pipelineId
           in: path
@@ -164,7 +190,7 @@ paths:
       tags:
         - Pipeline Status
       security:
-        - WriteToken: [ ]
+        - OAuth2ClientCredentials: [ 'write-pipeline' ]
       parameters:
         - name: pipelineId
           in: path
@@ -187,8 +213,7 @@ paths:
       tags:
         - Node Status
       security:
-        - ReadToken: [ ]
-        - WriteToken: [ ]
+        - OAuth2ClientCredentials: [ 'read-pipeline', 'write-pipeline' ]
       parameters:
         - name: nodeID
           in: path
@@ -221,7 +246,7 @@ paths:
       tags:
         - Node Status
       security:
-        - WriteToken: [ ]
+        - OAuth2ClientCredentials: [ 'write-pipeline' ]
       parameters:
         - name: nodeID
           in: path
@@ -255,8 +280,6 @@ components:
                   - Unauthorized
               detail:
                 type: string
-                enum:
-                  - Invalid access token provided. Please try again with appropriate credential.
     MissingResourceError:
       description: Resource UUID not found
       content:
@@ -274,8 +297,6 @@ components:
                   - Not Found
               detail:
                 type: string
-                enum:
-                  - A resource was not found matching the specified ID value.
     ResourceExistsError:
       description: Resource UUID already exists
       content:
@@ -293,8 +314,102 @@ components:
                   - Conflict
               detail:
                 type: string
-                enum:
-                  - One or more resources already exists with the given ID(s).
+  schemas:
+    Node: # Meta data for a given node
+      type: object
+      required:
+        - id
+        - name
+        - instances
+        - status
+      properties:
+        id:
+          type: string
+          pattern: ^[\da-f]{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
+        name:
+          type: string
+        description:
+          type: string
+        instances:
+          type: integer
+        status:
+          type: string
+          enum: [ 'launching', 'running', 'stopped', 'degraded', 'errored', 'unknown' ]
+        message:
+          type: string
+          maxLength: 250
+      example:
+        $ref: '#/components/examples/ExtractNode/value'
+    Connection: # Relationship between two individual nodes
+      type: object
+      required:
+        - upstream_node
+        - output_id
+        - output_name
+        - downstream_node
+        - input_id
+        - input_name
+      properties:
+        upstream_node:
+          type: string
+          pattern: ^[\da-f]{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
+        output_id:
+          type: string
+          pattern: ^[\da-f]{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
+        output_name:
+          type: string
+        downstream_node:
+          type: string
+          pattern: ^[\da-f]{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
+        input_id:
+          type: string
+          pattern: ^[\da-f]{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
+        input_name:
+          type: string
+    Pipeline: # Meta data for a given pipeline
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - launched
+        - status
+        - nodes
+      properties:
+        id:
+          type: string
+          pattern: ^[\da-f]{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
+        name:
+          type: string
+        description:
+          type: string
+        launched:
+          type: string
+          format: date-time
+          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$
+        status:
+          type: string
+          enum: [ 'launching', 'running', 'stopped', 'degraded', 'errored', 'unknown' ]
+        nodes: # Mapping of pipeline node IDs to downstream node IDs
+          type: array
+          items:
+            type: string
+            pattern: ^[\da-f]{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
+        edges:
+          type: array
+          items:
+            $ref: '#/components/schemas/Connection'
+      example:
+        $ref: '#/components/examples/ETLPipeline/value'
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: '/auth'
+          scopes:
+            read-pipeline: Read only permissions for resources tied to a single pipeline
+            write-pipeline: Full CRUD permissions for resources tied to a single pipeline
   examples:
     ExtractNode:
       summary: Extract node for an ETL pipeline
@@ -395,103 +510,3 @@ components:
             input_name: Processed data,
           },
         ]
-  schemas:
-    Node: # Meta data for a given node
-      required:
-        - id
-        - name
-        - instances
-        - status
-      type: object
-      properties:
-        id:
-          type: string
-          pattern: ^[\da-f]{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
-        name:
-          type: string
-        description:
-          type: string
-        instances:
-          type: integer
-        status:
-          type: string
-          enum: [ 'launching', 'running', 'stopped', 'degraded', 'errored', 'unknown' ]
-        message:
-          type: string
-          maxLength: 250
-      example:
-        $ref: '#/components/examples/ExtractNode/value'
-    Connection: # Relationship between two individual nodes
-      required:
-        - upstream_node
-        - output_id
-        - output_name
-        - downstream_node
-        - input_id
-        - input_name
-      type: object
-      properties:
-        upstream_node:
-          type: string
-          pattern: ^[\da-f]{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
-        output_id:
-          type: string
-          pattern: ^[\da-f]{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
-        output_name:
-          type: string
-        downstream_node:
-          type: string
-          pattern: ^[\da-f]{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
-        input_id:
-          type: string
-          pattern: ^[\da-f]{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
-        input_name:
-          type: string
-    Pipeline: # Meta data for a given pipeline
-      required:
-        - id
-        - name
-        - description
-        - launched
-        - status
-        - nodes
-      type: object
-      properties:
-        id:
-          type: string
-          pattern: ^[\da-f]{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
-        name:
-          type: string
-        description:
-          type: string
-        launched:
-          type: string
-          format: date-time
-          pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$
-        status:
-          type: string
-          enum: [ 'launching', 'running', 'stopped', 'degraded', 'errored', 'unknown' ]
-        nodes: # Mapping of pipeline node IDs to downstream node IDs
-          type: array
-          items:
-            type: string
-            pattern: ^[\da-f]{8}-\w{4}-\w{4}-\w{4}-\w{12}$ # UUID4 format
-        edges:
-          type: array
-          items:
-            $ref: '#/components/schemas/Connection'
-      example:
-        $ref: '#/components/examples/ETLPipeline/value'
-  securitySchemes:
-    ReadToken:
-      type: apiKey
-      in: query
-      name: readToken
-      description: |-
-        Read only API token limited in scope to data created by the parent user session.
-    WriteToken:
-      type: apiKey
-      in: query
-      name: writeToken
-      description: |-
-        API token with read/write permissions limited in scope to data created by the parent user session.
