@@ -3,10 +3,10 @@ info:
   title: Egon Status API
   version: "0.1"
   contact:
-    url: https://github.com/Egon-Framework/status-api
+    url: https://github.com/Egon-Framework/status-api-schema
   description: |-
-    The status API is used to track the status of Egon objects in production.
-    API endpoints are broken into two categories based on general use case.
+    The status API is used to track the status of Egon objects running in production.
+    API endpoints are broken into categories (tags) based on general use case.
 servers:
   - url: https://{url}:{port}/V1
     description: Local development server
@@ -177,8 +177,8 @@ paths:
             schema:
               $ref: '#/components/schemas/Pipeline'
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Created
         '401':
           $ref: '#/components/responses/UnauthorizedError'
         '409':
@@ -186,7 +186,7 @@ paths:
     delete:
       operationId: deletePipeline
       summary: Delete records for an existing pipeline
-      description: Delete records for an existing pipeline.
+      description: Delete all records associated with an existing pipeline.
       tags:
         - Pipeline Status
       security:
@@ -199,8 +199,8 @@ paths:
           schema:
             type: string
       responses:
-        '201':
-          description: Created
+        '200':
+          description: Deleted
         '401':
           $ref: '#/components/responses/UnauthorizedError'
         '404':
@@ -262,6 +262,15 @@ paths:
         '404':
           $ref: '#/components/responses/MissingResourceError'
 components:
+  securitySchemes:
+    OAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: '/auth'
+          scopes:
+            read-pipeline: Read only permissions for resources tied to a single pipeline
+            write-pipeline: Full CRUD permissions for resources tied to a single pipeline
   responses:
     UnauthorizedError:
       description: Authentication information is missing or invalid
@@ -371,7 +380,6 @@ components:
       required:
         - id
         - name
-        - description
         - launched
         - status
         - nodes
@@ -390,7 +398,7 @@ components:
         status:
           type: string
           enum: [ 'launching', 'running', 'stopped', 'degraded', 'errored', 'unknown' ]
-        nodes: # Mapping of pipeline node IDs to downstream node IDs
+        nodes:
           type: array
           items:
             type: string
@@ -401,34 +409,25 @@ components:
             $ref: '#/components/schemas/Connection'
       example:
         $ref: '#/components/examples/ETLPipeline/value'
-  securitySchemes:
-    OAuth2ClientCredentials:
-      type: oauth2
-      flows:
-        clientCredentials:
-          tokenUrl: '/auth'
-          scopes:
-            read-pipeline: Read only permissions for resources tied to a single pipeline
-            write-pipeline: Full CRUD permissions for resources tied to a single pipeline
   examples:
     ExtractNode:
       summary: Extract node for an ETL pipeline
       value:
         id: 760c45a4-9a65-418f-a442-aa8c3f22cad2
         name: Extract
-        description: Load data into the pipeline
+        description: Extract data into the pipeline
         instances: 1
         status: stopped
     TransformNode:
-      summary: Transform node in an ETL pipeline
+      summary: Transform node for an ETL pipeline
       value:
         id: 1da5a095-00af-45fe-ba1b-ea9576439f75
         name: Transform
         description: Transform and analyze pipeline data
         instances: 4
         status: running
-    LoadNode:
-      summary: The load step in an ETL pipeline
+    LoadNode:  # The `description` field is intentionally omitted in this example
+      summary: Load node for an ETL pipeline
       value:
         id: ae3de17e-1c7a-4817-b619-b5aa984ffe51
         name: Load
