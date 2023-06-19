@@ -2,11 +2,12 @@
 
 [![](https://app.codacy.com/project/badge/Grade/14c1aa3bed5a43a1b92e02679db13337)](https://app.codacy.com/gh/Egon-Framework/status-api-schema/dashboard)
 
-The status API is responsible for exposing Egon runtime metrics for use by the Egon visualization dashboard.
+The status API is responsible for tracking Egon runtime metrics within a distributed runtime environment. 
 This repository defines the API specification and provides documentation for running associated development tasks.
 
-The API is defined using the [OpenAPI](https://www.openapis.org/) specification (formally called _swagger_).
-Suitable examples are included in the specification for running a small development server.
+The API is defined using the [OpenAPI](https://www.openapis.org/) specification (formerly called _swagger_).
+Suitable examples are included in the specification for running a small development server. 
+All specifications included in this repository are treated as _working documents_ and are updated as necessary to support development on the Egon Framework.
 
 ## Developer Guidelines
 
@@ -28,21 +29,14 @@ spectral lint api/*.yml --fail-severity warn
 
 ### Running a Mock Server
 
-A mock API instance can be spun up using [prism](https://docs.stoplight.io/docs/prism/):
+A mock API instance can be run using [prism](https://docs.stoplight.io/docs/prism/):
 
 ```bash
-prism mock api/v0.1.yml -p 4010
+prism mock api/v0.yml -p 4010
 ```
 
 The mock server will automatically render responses using example data contained within the API specification.
 The included examples are limited, but suitable for general development tasks.
-
-When performing queries against the mock session, don't forget to provide a dummy auth token.
-While running a mock server, any token value will work. For example:
-
-```bash
-curl  http://127.0.0.1:4010/pipeline/123?token=1234
-```
 
 ### Contract Testing an Existing Server
 
