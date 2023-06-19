@@ -1,6 +1,7 @@
 # Status API Schema
 
 [![](https://app.codacy.com/project/badge/Grade/14c1aa3bed5a43a1b92e02679db13337)](https://app.codacy.com/gh/Egon-Framework/status-api-schema/dashboard)
+[![](https://github.com/Egon-Framework/status-api-schema/actions/workflows/OpenAPI.yml/badge.svg)](https://github.com/Egon-Framework/status-api-schema/actions/workflows/OpenAPI.yml)
 
 The status API is responsible for tracking Egon runtime metrics within a distributed runtime environment. 
 This repository defines the API specification and provides documentation for running associated development tasks.
